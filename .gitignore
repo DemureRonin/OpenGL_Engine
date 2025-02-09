@@ -1,0 +1,30 @@
+# Ignore Visual Studio and VS Code files
+.vs/
+*.sdf
+*.suo
+*.user
+*.VC.db
+*.pdb
+*.ipch
+
+# Ignore build directories
+/build/
+x64/
+bin/
+Debug/
+Release/
+
+# Ignore generated files
+*.exe
+*.dll
+*.obj
+*.lib
+*.ilk
+*.exp
+*.idb
+*.log
+*.out
+*.cache
+CMakeCache.txt
+CMakeFiles/
+Makefile
