@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include "Material.h"
 #include "Mesh.h"
 #include "Shader.h"
 
@@ -10,19 +11,25 @@
 class Object
 {
 public:
-    Object(std::vector<Vertex> &vertices, std::vector<unsigned int> &indices, glm::vec3 position = glm::vec3(0), glm::vec3 rotation = glm::vec3(0), glm::vec3 scale = glm::vec3(1))
-        : transform(position, rotation, scale), mesh(std::make_shared<Mesh>(vertices, indices)) {}
+    Object(glm::vec3 position = glm::vec3(0), glm::vec3 rotation = glm::vec3(0), glm::vec3 scale = glm::vec3(1))
+        : transform(position, rotation, scale){}
     
     Transform transform;
     std::shared_ptr<Mesh> mesh;
-    void Draw(Shader shader)
+    std::shared_ptr<Material> material;
+    
+    void Draw() const
     {
-        mesh->Draw(shader);
+        mesh->Draw(material);
     }
-    void SetMesh( std::vector<Vertex>& vertices, std::vector<unsigned int>& indices) 
+    void SetMesh( const std::shared_ptr<Mesh>& newMesh) 
     {
-        mesh.reset();
-        mesh = std::make_shared<Mesh>(vertices, indices);
-      
+        this->mesh.reset();
+        this->mesh = newMesh;
+    }
+    void SetMaterial( const std::shared_ptr<Material>& newMaterial) 
+    {
+        this->material.reset();
+        this->material = newMaterial;
     }
 };

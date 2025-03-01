@@ -3,7 +3,9 @@
 #include <vector>
 
 #include "IndexBuffer.h"
+#include "Material.h"
 #include "Shader.h"
+#include "Texture.h"
 #include "VertexArray.h"
 #include "glm/vec2.hpp"
 #include "glm/vec3.hpp"
@@ -21,16 +23,17 @@ class Mesh
 public:
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
+    std::vector<std::shared_ptr<Texture>> textures;
     VertexArray VAO;
     VertexBuffer VBO;
     IndexBuffer EBO;
 
     Mesh(std::vector<Vertex> &vertices, std::vector<unsigned int> &indices);
-    void Draw(Shader& shader);
+    void Draw(const std::shared_ptr<Material>& material) const;
     
 private:
     void SetupMesh();
-    VertexBufferLayout layout;
+    VertexBufferLayout m_Layout;
    
 };
 

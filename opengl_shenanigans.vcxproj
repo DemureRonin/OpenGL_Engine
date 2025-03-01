@@ -1154,6 +1154,7 @@
     <Content Include="Source\Shaders\Unlit.glsl" />
     <Content Include="Textures\200px-Debugempty.png" />
     <Content Include="Textures\container2.png" />
+    <Content Include="Textures\container2_specular.png" />
     <Content Include="Textures\sun.png" />
     <Content Include="x64\Debug\opengl_shenanigans.exe" />
     <Content Include="x64\Debug\opengl_shenanigans.pdb" />

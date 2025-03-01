@@ -22,15 +22,6 @@
 
 struct ImGuiIO;
 
-struct MatSettings
-{
-    glm::vec3 lightAmbient = glm::vec3(0.2f, 0.2f, 0.2f);
-    glm::vec3 lightDiffuse = glm::vec3(0.5f, 0.5f, 0.5f);
-    glm::vec3 lightSpecular = glm::vec3(1.0f, 1.0f, 1.0f);
-    glm::vec3 lightDirection = glm::vec3(-0.2f, -1.0f, -0.3f);
-    float shininess = 32;
-};
-
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 
@@ -69,13 +60,12 @@ std::vector<Vertex> ConvertToVertexData(std::vector<float>& data)
     return vertices;
 }
 
-
-void UpdateTerrain(bool cond);
+std::vector<std::shared_ptr<Texture>> InitializeTextures(std::vector<std::string> texturePaths);
+void InitializeShaders();
+void InitializeMaterials();
 
 int main()
 {
-    // glfw: initialize and configure
-    // ------------------------------
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -85,8 +75,6 @@ int main()
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-    // glfw window creation
-    // --------------------
     GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
     if (window == NULL)
     {
@@ -102,8 +90,6 @@ int main()
     ImGuiIO io;
     init_imgui(window, io);
 
-    // glad: load all OpenGL function pointers
-    // ---------------------------------------
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
         std::cout << "Failed to initialize GLAD" << std::endl;
@@ -111,35 +97,25 @@ int main()
     }
     glEnable(GL_DEPTH_TEST);
 
-
-    // Texture obj_texture("Textures/container2.png");
-
+    std::vector<std::string> texturePaths{"Textures/container2.png", "Textures/container2_specular.png"};
+    auto textures = InitializeTextures(texturePaths);
+    textures[0]->m_Type = ALBEDO;
+    textures[1]->m_Type = SPECULAR;
+    
+    std::vector<Vertex> vertexData = ConvertToVertexData(cubeData);
+    auto mesh = std::make_shared<Mesh>(vertexData, cubeIndicies);
+    
     LitShader litShader;
+    auto material = std::make_shared<Material> (litShader.shader, textures);
+    material->shininess = 64;
+    
+  
     DirectionalLight dirLight;
-    Material material;
-
     Renderer renderer;
-
-    auto start = std::chrono::high_resolution_clock::now();
-    generateTerrain();
-    generateMesh();
-    auto end = std::chrono::high_resolution_clock::now();
-
-    std::chrono::duration<double> duration = end - start; // Calculate elapsed time
-
-    std::cout << "Execution time: " << duration.count() << " seconds" << std::endl;
-    for (size_t i = 0; i < vertices.size(); ++i)
-    {
-        Vertex vertex;
-        vertex.Position = vertices[i];
-        vertex.Normal = normals[i];
-        vertex.UV = UV[i];
-
-        convertedVertices.push_back(vertex);
-    }
-    Object terrain(convertedVertices, indices);
-    /*std::vector<Vertex> vertexData = ConvertToVertexData(cubeData);
-    Object cube(vertexData, cubeIndicies);*/
+    
+    std::shared_ptr<Object> cube = std::make_shared<Object>();
+    cube->SetMaterial(material);
+    cube->SetMesh(mesh);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -148,38 +124,38 @@ int main()
         lastFrame = currentFrame;
 
         renderer.Clear(glm::vec4(0.529, 0.808, 0.922, 1.0f));
-
         processInput(window);
-
-        setup_ui_terrain_window(io, terrain);
-
-        //obj_texture.Bind();
         //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         litShader.SetDirectionalLightUniforms(dirLight);
-        // if (plane.transform.position.x < 1.0f) material.tint = glm::vec4(1.0f, .0f, .0f, 1);
+        litShader.SetMaterialUniforms(*material);
 
-        material.tint = glm::vec4(0.133, 0.545, 0.133, 1.0f);
-        litShader.SetMaterialUniforms(material);
-        // cube.transform.SetPosition(glm::vec3(i * 2, j * 2, k * 2));
-        // plane.transform.ApplyTranslation();
-        //std::cout << i << ", " << j << ", " << k << std::endl;
-        litShader.SetObjectUniforms(camera, terrain);
-
-        terrain.Draw(litShader.shader);
-
-
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        litShader.SetObjectUniforms(camera, *cube);
+        
+        cube->Draw();
+        // ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
+    // ImGui_ImplOpenGL3_Shutdown();
+    //ImGui_ImplGlfw_Shutdown();
+    //ImGui::DestroyContext();
 
     glfwTerminate();
     return 0;
 }
+
+std::vector<std::shared_ptr<Texture>> InitializeTextures(std::vector<std::string> texturePaths)
+{
+    std::vector<std::shared_ptr<Texture>> textures;
+    for (size_t i = 0; i < texturePaths.size(); i++)
+    {
+        auto texture = std::make_shared<Texture>(texturePaths[i]);
+        textures.push_back(texture);
+    }
+    return textures;
+}
+
 
 bool rightButtonPressed = false;
 bool shiftPressed = false;
@@ -212,7 +188,7 @@ void processInput(GLFWwindow* window)
     {
         if (!shiftPressed)
         {
-            camera.MovementSpeed = 500;
+            camera.MovementSpeed = 5;
             shiftPressed = true;
         }
     }
@@ -220,7 +196,7 @@ void processInput(GLFWwindow* window)
     {
         if (shiftPressed)
         {
-            camera.MovementSpeed = 100;
+            camera.MovementSpeed = 10;
             shiftPressed = false;
         }
     }
@@ -273,53 +249,3 @@ void init_imgui(GLFWwindow* window, ImGuiIO& io)
 }
 
 
-void UpdateTerrain(Object& terrain)
-{
-    ClearData();
-    auto start = std::chrono::high_resolution_clock::now();
-
-    generateTerrain();
-    generateMesh();
-
-    auto end = std::chrono::high_resolution_clock::now();
-
-    std::chrono::duration<double> duration = end - start; // Calculate elapsed time
-
-    std::cout << "Execution time: " << duration.count() << " seconds" << std::endl;
-    convertedVertices.clear();
-    for (size_t i = 0; i < vertices.size(); ++i)
-    {
-        Vertex vertex;
-        vertex.Position = vertices[i];
-        vertex.Normal = normals[i];
-        vertex.UV = UV[i];
-
-        convertedVertices.push_back(vertex);
-    }
-    terrain.SetMesh(convertedVertices, indices);
-}
-
-void setup_ui_terrain_window(ImGuiIO io, Object& terrain)
-{
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
-    ImGui::SetNextWindowSize(ImVec2(400, 300), ImGuiCond_FirstUseEver);
-    {
-        ImGui::Begin("Terrain Settings");
-
-        ImGui::SliderFloat("NoiseScale", &noiseScale, 0, 10);
-        ImGui::SliderFloat("persistence", &persistence, 0, 1);
-        ImGui::SliderFloat("lacunarity", &lacunarity, 0, 10);
-        ImGui::SliderInt("octaves", &octaves, 1, 4);
-        if (ImGui::Button("Update"))
-        {
-            UpdateTerrain(terrain);
-        }
-
-
-        ImGui::End();
-    }
-
-    ImGui::Render();
-}

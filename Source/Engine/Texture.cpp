@@ -27,7 +27,7 @@ Texture::Texture(const std::string &filePath)
   } else {
     std::cout << "Failed to load texture" << std::endl;
   }
-  Unbind();
+  //Unbind();
 }
 Texture::~Texture() {
   glDeleteTextures(1, &m_RendererID);
