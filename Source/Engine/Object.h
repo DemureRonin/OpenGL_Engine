@@ -6,7 +6,6 @@
 
 #include "Transform.h"
 #include "glm/detail/func_packing_simd.inl"
-#include "glm/vec3.hpp"
 
 class Object
 {

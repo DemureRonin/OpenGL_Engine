@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include "Shader.h"
 
 class DirectionalLight
 {

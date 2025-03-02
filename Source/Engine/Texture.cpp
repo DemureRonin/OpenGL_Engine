@@ -1,9 +1,6 @@
 ﻿#include "Texture.h"
-
 #include "glad/glad.h"
 #include "stb_image_impl.h"
-
-#include <iostream>
 Texture::Texture(const std::string &filePath)
     : m_RendererID(0), m_FilePath(filePath), m_LocalBuffer(nullptr), m_Width(0),
       m_Height(0), m_BPP(0) {
@@ -27,7 +24,7 @@ Texture::Texture(const std::string &filePath)
   } else {
     std::cout << "Failed to load texture" << std::endl;
   }
-  //Unbind();
+  Unbind();
 }
 Texture::~Texture() {
   glDeleteTextures(1, &m_RendererID);

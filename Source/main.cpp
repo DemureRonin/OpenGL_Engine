@@ -1,23 +1,19 @@
 #include "dependencies.h"
 #include "Engine.h"
 
-
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
 
 #include <algorithm>
-#include <chrono>
-
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 
 #include "Positions.h"
 #include "Engine/LitShader.h"
 #include "Engine/Mesh.h"
 #include "Engine/CubeMarching.h"
+#include "Engine/Model.h"
 #include "glm/gtc/noise.hpp"
 
 struct ImGuiIO;
@@ -97,22 +93,29 @@ int main()
     }
     glEnable(GL_DEPTH_TEST);
 
-    std::vector<std::string> texturePaths{"Textures/container2.png", "Textures/container2_specular.png"};
+    std::vector<std::string> texturePaths{};
     auto textures = InitializeTextures(texturePaths);
-    textures[0]->m_Type = ALBEDO;
-    textures[1]->m_Type = SPECULAR;
-    
+    // textures[0]->m_Type = ALBEDO;
+    //textures[1]->m_Type = SPECULAR;
+
     std::vector<Vertex> vertexData = ConvertToVertexData(cubeData);
     auto mesh = std::make_shared<Mesh>(vertexData, cubeIndicies);
-    
+
     LitShader litShader;
-    auto material = std::make_shared<Material> (litShader.shader, textures);
+    auto material = std::make_shared<Material>(litShader.shader, textures);
     material->shininess = 64;
-    
-  
+
+
+    char modelPath[100] = "Source/Models/suzanne_blender_monkey.glb";
+    Model model(modelPath);
+    auto modelMesh = std::make_shared<Mesh>(model.meshes[0]->vertices, model.meshes[0]->indices);
+    std::shared_ptr<Object> monkey = std::make_shared<Object>();
+    monkey->SetMaterial(material);
+    monkey->SetMesh(modelMesh);
+
     DirectionalLight dirLight;
     Renderer renderer;
-    
+
     std::shared_ptr<Object> cube = std::make_shared<Object>();
     cube->SetMaterial(material);
     cube->SetMesh(mesh);
@@ -125,14 +128,14 @@ int main()
 
         renderer.Clear(glm::vec4(0.529, 0.808, 0.922, 1.0f));
         processInput(window);
-        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         litShader.SetDirectionalLightUniforms(dirLight);
         litShader.SetMaterialUniforms(*material);
 
         litShader.SetObjectUniforms(camera, *cube);
-        
-        cube->Draw();
+
+        monkey->Draw();
         // ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -148,10 +151,18 @@ int main()
 std::vector<std::shared_ptr<Texture>> InitializeTextures(std::vector<std::string> texturePaths)
 {
     std::vector<std::shared_ptr<Texture>> textures;
-    for (size_t i = 0; i < texturePaths.size(); i++)
+    if (texturePaths.empty())
     {
-        auto texture = std::make_shared<Texture>(texturePaths[i]);
+        auto texture = std::make_shared<Texture>(WHITE_TEXTURE);
         textures.push_back(texture);
+    }
+    else
+    {
+        for (size_t i = 0; i < texturePaths.size(); i++)
+        {
+            auto texture = std::make_shared<Texture>(texturePaths[i]);
+            textures.push_back(texture);
+        }
     }
     return textures;
 }
@@ -239,13 +250,10 @@ void init_imgui(GLFWwindow* window, ImGuiIO& io)
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     io = ImGui::GetIO();
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; // Enable Gamepad Controls
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; 
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; 
 
-    // Setup Platform/Renderer backends
-    ImGui_ImplGlfw_InitForOpenGL(window, true); // Second param install_callback=true will install GLFW
-    // callbacks and chain to existing ones.
+    
+    ImGui_ImplGlfw_InitForOpenGL(window, true); 
     ImGui_ImplOpenGL3_Init();
 }
-
-

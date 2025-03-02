@@ -1,5 +1,7 @@
 ﻿#pragma once
 #include <string>
+#include <iostream>
+#define WHITE_TEXTURE "Textures/System/1x1_white.jpeg"
 enum TextureType
 {
     ALBEDO = 0,
@@ -8,6 +10,7 @@ enum TextureType
     ROUGHNESS = 3,
     SPECULAR = 4,
 };
+
 class Texture
 {
    

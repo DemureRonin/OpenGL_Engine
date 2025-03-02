@@ -33,7 +33,7 @@ public:
 
     void SetObjectUniforms(const Camera& camera, const Object &object) const
     {
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)1920 / (float)1080, 0.1f, 1000.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), static_cast<float>(1920) / static_cast<  float>(1080), 0.1f, 1000.0f);
         glm::mat4 view = camera.GetViewMatrix();
         glm::mat4 Mmat4 = object.transform.modelMatrix;
         glm::mat4 Vmat4 = view;

@@ -96,6 +96,7 @@
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
     <ClCompile Include="Source\Engine\Mesh.cpp" />
+    <ClCompile Include="Source\Engine\Model.cpp" />
     <ClCompile Include="Source\Engine\Object.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -770,6 +771,8 @@
       <SDLCheck>true</SDLCheck>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="Source\UI\ObjectUIWindow.cpp" />
+    <ClCompile Include="Source\UI\UIWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Libraries\Include\glad\glad.h" />
@@ -1073,6 +1076,7 @@
     <ClInclude Include="Source\Engine\LitShader.h" />
     <ClInclude Include="Source\Engine\Material.h" />
     <ClInclude Include="Source\Engine\Mesh.h" />
+    <ClInclude Include="Source\Engine\Model.h" />
     <ClInclude Include="Source\Engine\Object.h" />
     <ClInclude Include="Source\Engine\Renderer.h" />
     <ClInclude Include="Source\Engine\Shader.h" />
@@ -1095,6 +1099,8 @@
     <ClInclude Include="Source\LookupTable.h" />
     <ClInclude Include="Source\FastNoiseLite.h" />
     <ClInclude Include="Source\Positions.h" />
+    <ClInclude Include="Source\UI\ObjectUIWindow.h" />
+    <ClInclude Include="Source\UI\UIWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".idea\.idea.opengl_shenanigans\.idea\.gitignore" />
@@ -1149,6 +1155,7 @@
     <Content Include="opengl_shenanigans.sln" />
     <Content Include="opengl_shenanigans.vcxproj.filters" />
     <Content Include="opengl_shenanigans.vcxproj.user" />
+    <Content Include="Source\Models\suzanne_blender_monkey.glb" />
     <Content Include="Source\Shaders\Lit.glsl" />
     <Content Include="Source\Shaders\Structs.glsl" />
     <Content Include="Source\Shaders\Unlit.glsl" />
@@ -1156,6 +1163,7 @@
     <Content Include="Textures\container2.png" />
     <Content Include="Textures\container2_specular.png" />
     <Content Include="Textures\sun.png" />
+    <Content Include="Textures\System\1x1_white.jpeg" />
     <Content Include="x64\Debug\opengl_shenanigans.exe" />
     <Content Include="x64\Debug\opengl_shenanigans.pdb" />
   </ItemGroup>
@@ -1402,7 +1410,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimp-vc143-mtd.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
