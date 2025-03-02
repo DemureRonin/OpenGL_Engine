@@ -1,5 +1,5 @@
 ﻿#include "Texture.h"
-#include "glad/glad.h"
+
 #include "stb_image_impl.h"
 Texture::Texture(const std::string &filePath)
     : m_RendererID(0), m_FilePath(filePath), m_LocalBuffer(nullptr), m_Width(0),
@@ -22,7 +22,7 @@ Texture::Texture(const std::string &filePath)
     glGenerateMipmap(GL_TEXTURE_2D);
     stbi_image_free(m_LocalBuffer);
   } else {
-    std::cout << "Failed to load texture" << std::endl;
+    std::cout << TEXTURE_LOG << "\033[31m Failed to load \033[0m" << filePath << std::endl;
   }
   Unbind();
 }

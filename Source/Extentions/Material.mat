@@ -1,0 +1,7 @@
+﻿{
+    "textures": [
+        "Textures/container2.png"
+    ],
+    "tint": [1.0, 1.0, 1.0, 1.0],
+    "shininess": 32.5
+}

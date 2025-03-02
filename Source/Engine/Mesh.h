@@ -2,11 +2,12 @@
 #include <string>
 #include <vector>
 
-#include "IndexBuffer.h"
+
 #include "Material.h"
 #include "Shader.h"
 #include "Texture.h"
-#include "VertexArray.h"
+#include "Buffers/VAO/VertexArray.h"
+#include "Buffers/EBO/IndexBuffer.h"
 #include "glm/vec2.hpp"
 #include "glm/vec3.hpp"
 
@@ -28,7 +29,7 @@ public:
     VertexBuffer VBO;
     IndexBuffer EBO;
 
-    Mesh(std::vector<Vertex> &vertices, std::vector<unsigned int> &indices);
+    Mesh(const std::vector<Vertex> &vertices,const std::vector<unsigned int> &indices);
     void Draw(const std::shared_ptr<Material>& material) const;
     
 private:

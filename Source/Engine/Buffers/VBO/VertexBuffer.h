@@ -1,5 +1,7 @@
 ﻿#pragma once
-#include "ProgramObject.h"
+#include "glad/glad.h"
+#include "../../ProgramObject.h"
+
 class VertexBuffer  : public ProgramObject{
 public:
   VertexBuffer(const void* data, unsigned int size);

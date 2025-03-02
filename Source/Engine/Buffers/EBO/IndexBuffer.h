@@ -1,5 +1,6 @@
 ﻿#pragma once
-#include "ProgramObject.h"
+#include "glad/glad.h"
+#include "../../ProgramObject.h"
 
 class IndexBuffer : public ProgramObject {
 private:

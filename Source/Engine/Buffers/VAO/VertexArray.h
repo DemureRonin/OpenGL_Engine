@@ -1,7 +1,7 @@
 ﻿#pragma once
-#include "ProgramObject.h"
-#include "VertexBuffer.h"
-#include "VertexBufferLayout.h"
+#include "../../ProgramObject.h"
+#include "../VBO/VertexBuffer.h"
+#include "../VertexBufferLayout.h"
 
 class VertexArray : public ProgramObject {
 

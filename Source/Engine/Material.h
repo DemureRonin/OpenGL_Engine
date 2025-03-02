@@ -7,17 +7,25 @@
 
 class Material
 {
+private:
+    unsigned int m_ID;
+
 public:
     glm::vec4 tint;
     float shininess;
     std::shared_ptr<Shader> shader;
     std::vector<std::shared_ptr<Texture>> textures;
+    unsigned int GetID() const { return m_ID; }
 
     Material(const std::shared_ptr<Shader>& shader, const std::vector<std::shared_ptr<Texture>>& textures,
+             unsigned int ID,
              glm::vec4 tint = glm::vec4(1.0f), float shininess = 1.0f)
-        : tint(tint), shininess(shininess)
+        : tint(tint), shininess(shininess), m_ID(ID)
     {
         this->shader = shader;
         this->textures = textures;
+    }
+    bool operator<(const Material& other) const {
+        return m_ID < other.GetID();
     }
 };
