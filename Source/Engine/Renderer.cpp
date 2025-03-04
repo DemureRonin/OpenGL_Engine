@@ -1,7 +1,7 @@
 ﻿#include "Renderer.h"
 #include "../Utils/Colors.h"
 bool Renderer::polygonMode = false;
-glm::vec4 Renderer::color = COLOR_SKY_BLUE;
+glm::vec4 Renderer::color = COLOR_DARK_GREY;
 
 void Renderer::SetPolygonMode()
 {
@@ -15,4 +15,12 @@ void Renderer::Clear()
 {
     glClearColor(color.x, color.y, color.z, color.a);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void Renderer::SetBackfaceCulling()
+{
+    glEnable(GL_CULL_FACE);
+
+    // Set the culling mode to backface culling (default)
+    glCullFace(GL_BACK);
 }

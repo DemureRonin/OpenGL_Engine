@@ -15,4 +15,5 @@ public:
     static glm::vec4 color;
     static void SetPolygonMode();
     static void Clear();
+    static void SetBackfaceCulling();
 };

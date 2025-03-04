@@ -1,0 +1,20 @@
+{
+  "material": "Source/Extentions/Material1.mat",
+  "mesh": "Source/Extentions/Mesh.mesh",
+  "name": "Susanne",
+  "position": [
+    6.0,
+    0.30000001192092896,
+    0.0
+  ],
+  "rotation": [
+    -11.0,
+    -27.0,
+    -45.0
+  ],
+  "scale": [
+    1.0099999904632568,
+    1.0,
+    0.9100000262260437
+  ]
+}

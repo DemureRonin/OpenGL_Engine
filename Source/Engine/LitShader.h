@@ -27,28 +27,14 @@ public:
     {
         shader->SetFloat("material.shininess", material->shininess);
         shader->SetVec4("material.tint", material->tint);
+        std::vector<const char*> uniformNames {"material.albedo", "material.normal", "material.roughness"};
         for (unsigned int i = 0; i < material->textures.size(); i ++)
         {
-            material->textures[i]->Bind(material->textures[i]->GetType());
-            switch (material->textures[i]->GetType())
-            {
-            case ALBEDO:
-                material->shader->SetInt("material.albedo", ALBEDO);
-                break;
-            case NORMAL:
-                material->shader->SetInt("material.normal", NORMAL);
-                break;
-            case ROUGHNESS:
-                material->shader->SetInt("material.roughness", ROUGHNESS);
-                break;
-            case METALLIC:
-                material->shader->SetInt("material.metallic", METALLIC);
-                break;
-            case SPECULAR:
-                material->shader->SetInt("material.specular", SPECULAR);
-                break;
-            }
+            material->textures[i]->Bind(i);
+            material->shader->SetInt(uniformNames[i], static_cast<int>(i));
         }
+        shader->SetFloat("material.normalScale", material->normalScale);
+        shader->SetFloat("material.metallicProperty", material->metallicProperty);
     }
 
     void SetObjectUniforms(const Camera& camera, const Object& object) const

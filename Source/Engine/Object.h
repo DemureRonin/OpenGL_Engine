@@ -18,10 +18,11 @@ public:
     }
 
     std::string name = "Object";
+    std::string m_FilePath;
     Transform transform;
     std::shared_ptr<Mesh> mesh;
     std::shared_ptr<Material> material;
-
+    std::string GetFilePath() { return m_FilePath; }
     void Draw()
     {
         transform.ApplyTranslation();

@@ -19,14 +19,12 @@
 #include "Parsers/ObjectParser.h"
 #include "UI/DirectionalLightUIWindow.h"
 #include "UI/HierarchyUIWindow.h"
+#include "UI/MaterialUIWindow.h"
 
 #include "UI/ObjectUIWindow.h"
 #include "UI/RendererUIWindow.h"
 
-
-float deltaTime = 0.0f;
-float lastFrame = 0.0f;
-
+#include "Utils/Primitives/PlanePositions.h"
 
 int main()
 {
@@ -40,14 +38,23 @@ int main()
     ImGUIInitializer::InitImGUI(window, io);
 
     if (GLADInitializer::InitGLAD()) return -1;
-
-    auto cubeMesh = std::make_shared<Mesh>(cubeData, cubeIndicies);
+    Renderer::SetBackfaceCulling();
+    auto planeMesh = std::make_shared<Mesh>(planeVertices, planeIndices);
     std::vector<std::shared_ptr<Object>> object_hierarchy = {};
     LitShader litShader;
     DirectionalLight dirLight;
 
-    std::shared_ptr<Object> object = ObjectParser::ParseObject("Source/Extentions/Object.json", litShader);
+    std::shared_ptr<Object> object = ObjectParser::LoadObject("Source/Extentions/Object.object", litShader);
+    std::shared_ptr<Object> sphere = ObjectParser::LoadObject("Source/Extentions/Object1.object", litShader);
+    std::shared_ptr<Object> plane = ObjectParser::LoadObject("Source/Extentions/Object2.object", litShader);
+    // std::shared_ptr<Object> plane  = ObjectParser::LoadObject("Source/Extentions/Object2.object", litShader);
+
+    object->SetMaterial(sphere->material);
+    plane->SetMaterial(sphere->material);
+
     object_hierarchy.push_back(object);
+    object_hierarchy.push_back(sphere);
+    object_hierarchy.push_back(plane);
 
     std::map<std::shared_ptr<Material>, std::vector<std::shared_ptr<Object>>> materialObjectMap;
     for (const auto& obj : object_hierarchy)
@@ -67,6 +74,7 @@ int main()
 
         litShader.shader->Bind();
         litShader.SetDirectionalLightUniforms(dirLight);
+        
         for (const auto& pair : materialObjectMap)
         {
             std::shared_ptr<Material> material = pair.first;
@@ -80,18 +88,22 @@ int main()
                 obj->Draw();
             }
         }
-
+      
 
         ObjectUIWindow::Render();
         HierarchyUIWindow::Render(object_hierarchy);
         RendererUIWindow::Render();
         DirectionalLightUIWindow::Render(dirLight);
-        // MaterialUIWindow::Render(*mat);
+        MaterialUIWindow::Render(*object->material);
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         glfwSwapBuffers(window);
         glfwPollEvents();
+    }
+    for (const auto& obj : object_hierarchy)
+    {
+        ObjectParser::SaveObject(obj->GetFilePath().c_str(), obj);
     }
     ImGUIInitializer::ShutdownImGUI();
 

@@ -25,3 +25,4 @@
 #define COLOR_LAVENDER       glm::vec4(0.90f, 0.90f, 0.98f, 1.0f) // Soft purple
 #define COLOR_TEAL           glm::vec4(0.0f, 0.50f, 0.50f, 1.0f)  // Cyan-green mix
 #define COLOR_BEIGE          glm::vec4(0.96f, 0.96f, 0.86f, 1.0f) // Light sand
+#define COLOR_DARK_GREY          glm::vec4(0.15f, 0.15f, 0.15f, 1.0f) // Light sand

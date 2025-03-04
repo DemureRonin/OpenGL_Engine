@@ -24,6 +24,8 @@ void Mesh::SetupMesh()
     m_Layout.Push(GL_FLOAT, 3);
     m_Layout.Push(GL_FLOAT, 3);
     m_Layout.Push(GL_FLOAT, 2);
+    m_Layout.Push(GL_FLOAT, 3);
+    m_Layout.Push(GL_FLOAT, 3);
 
     VAO.AddVertexBuffer(VBO, m_Layout);
 }

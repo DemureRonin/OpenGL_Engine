@@ -1,7 +1,9 @@
 ﻿{
     "textures": [
-       
+       "Textures/Metal017_2K-JPG_Color.jpg", "Textures/Metal017_2K-JPG_NormalDX.jpg"
     ],
-    "tint": [0.5, 0.0, 0.3, 1.0],
-    "shininess": 128.5
+    "tint": [1, 1, 1, 1.0],
+    "shininess": 0.4, 
+    "metallicProperty": 0, 
+    "normalScale": 1
 }

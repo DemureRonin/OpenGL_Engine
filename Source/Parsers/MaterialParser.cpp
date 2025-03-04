@@ -7,7 +7,7 @@ std::shared_ptr<Material> MaterialParser::ParseMaterial(const char* filePath, Li
     std::ifstream file(filePath);
     if (!file.is_open())
     {
-        std::cerr << "Error opening file!" << '\n';
+        std::cerr << "[MATERIAL PARSER] Error opening file!" << '\n';
         return nullptr;
     }
 
@@ -21,6 +21,8 @@ std::shared_ptr<Material> MaterialParser::ParseMaterial(const char* filePath, Li
     glm::vec4 tint = glm::vec4(data["tint"][0].get<float>(), data["tint"][1].get<float>(), data["tint"][2].get<float>(),
                                data["tint"][3].get<float>());
     float shininess = data["shininess"].get<float>();
+    float metallicProperty = data["metallicProperty"].get<float>();
+    float normalScale = data["normalScale"].get<float>();
 
     std::vector<std::shared_ptr<Texture>> textures_loaded;
     if (textures.empty())
@@ -35,8 +37,9 @@ std::shared_ptr<Material> MaterialParser::ParseMaterial(const char* filePath, Li
         }
     }
 
-    std::shared_ptr<Material> mat = std::make_shared<Material>(shader.shader, textures_loaded, m_IDCount++);
+    std::shared_ptr<Material> mat = std::make_shared<Material>(shader.shader, textures_loaded,metallicProperty, normalScale,  m_IDCount++);
     mat->tint = tint;
     mat->shininess = shininess;
+    mat->m_FilePath = filePath;
     return mat;
 }

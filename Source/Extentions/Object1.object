@@ -1,0 +1,20 @@
+{
+  "material": "Source/Extentions/Material1.mat",
+  "mesh": "Source/Extentions/Mesh2.mesh",
+  "name": "Sphere",
+  "position": [
+    1.100000023841858,
+    0.0,
+    0.0
+  ],
+  "rotation": [
+    -36.0,
+    0.0,
+    0.0
+  ],
+  "scale": [
+    1.0,
+    1.0,
+    1.0
+  ]
+}

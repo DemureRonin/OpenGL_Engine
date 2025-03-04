@@ -11,7 +11,7 @@ void MaterialUIWindow::Render(Material& material)
     ImGui::ColorEdit4("##color", &material.tint.x);
     ImGui::Spacing();
     ImGui::Text("Shininess:");
-    ImGui::DragFloat("##Shininess", &material.shininess, 0.1f, 0.0f, 128.0f); 
+    ImGui::DragFloat("##Shininess", &material.shininess, 0.01f, 0, 1); 
 
     ImGui::End();
 }
