@@ -95,6 +95,8 @@
       <SDLCheck>true</SDLCheck>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="Source\Engine\Buffers\FBO\FrameBuffer.cpp" />
+    <ClCompile Include="Source\Engine\Buffers\RBO\RenderBufferObject.cpp" />
     <ClCompile Include="Source\Engine\Buffers\VAO\VertexArray.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -243,6 +245,8 @@
       <SDLCheck>true</SDLCheck>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="Source\Engine\ConsoleDebug\ConsoleDebug.cpp" />
+    <ClCompile Include="Source\Engine\Managers\ObjectManager.cpp" />
     <ClCompile Include="Source\Engine\Managers\TextureManager.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -393,6 +397,7 @@
       <SDLCheck>true</SDLCheck>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="Source\Engine\PostProcessing.cpp" />
     <ClCompile Include="Source\Engine\ProgramObject.h">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -920,6 +925,8 @@
       <SDLCheck>true</SDLCheck>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="Source\nativefiledialog\nfd_common.c" />
+    <ClCompile Include="Source\nativefiledialog\nfd_win.cpp" />
     <ClCompile Include="Source\Parsers\MaterialParser.cpp" />
     <ClCompile Include="Source\Parsers\MeshParser.cpp" />
     <ClCompile Include="Source\Parsers\ObjectParser.cpp" />
@@ -1222,23 +1229,26 @@
     <ClInclude Include="Libraries\Include\glm\vec4.hpp" />
     <ClInclude Include="Libraries\Include\glm\vector_relational.hpp" />
     <ClInclude Include="Libraries\Include\KHR\khrplatform.h" />
-    <ClInclude Include="Source\dependencies.h" />
-    <ClInclude Include="Source\Engine.h" />
     <ClInclude Include="Source\Engine\Buffers\EBO\IndexBuffer.h" />
+    <ClInclude Include="Source\Engine\Buffers\FBO\FrameBuffer.h" />
+    <ClInclude Include="Source\Engine\Buffers\RBO\RenderBufferObject.h" />
     <ClInclude Include="Source\Engine\Buffers\VAO\VertexArray.h" />
     <ClInclude Include="Source\Engine\Buffers\VBO\VertexBuffer.h" />
     <ClInclude Include="Source\Engine\Buffers\VertexBufferLayout.h" />
     <ClInclude Include="Source\Engine\Camera.h" />
+    <ClInclude Include="Source\Engine\ConsoleDebug\DebugUtils.h" />
+    <ClInclude Include="Source\Engine\ConsoleDebug\ConsoleDebug.h" />
     <ClInclude Include="Source\Engine\DirectionalLight.h" />
     <ClInclude Include="Source\Engine\Initialization\GLADInitializer.h" />
     <ClInclude Include="Source\Engine\Initialization\GLFWInitializer.h" />
     <ClInclude Include="Source\Engine\Initialization\ImGUIInitializer.h" />
-    <ClInclude Include="Source\Engine\LitShader.h" />
+    <ClInclude Include="Source\Engine\Managers\ObjectManager.h" />
     <ClInclude Include="Source\Engine\Managers\TextureManager.h" />
     <ClInclude Include="Source\Engine\Material.h" />
     <ClInclude Include="Source\Engine\Mesh.h" />
     <ClInclude Include="Source\Engine\Model.h" />
     <ClInclude Include="Source\Engine\Object.h" />
+    <ClInclude Include="Source\Engine\PostProcessing.h" />
     <ClInclude Include="Source\Engine\Renderer.h" />
     <ClInclude Include="Source\Engine\Shader.h" />
     <ClInclude Include="Source\Engine\stb_image.h" />
@@ -1257,7 +1267,9 @@
     <ClInclude Include="Source\imgui\imstb_truetype.h" />
     <ClInclude Include="Source\InputProcessor.h" />
     <ClInclude Include="Source\LookupTable.h" />
-    <ClInclude Include="Source\FastNoiseLite.h" />
+    <ClInclude Include="Source\nativefiledialog\common.h" />
+    <ClInclude Include="Source\nativefiledialog\nfd.h" />
+    <ClInclude Include="Source\nativefiledialog\nfd_common.h" />
     <ClInclude Include="Source\Parsers\MaterialParser.h" />
     <ClInclude Include="Source\Parsers\MeshParser.h" />
     <ClInclude Include="Source\Parsers\ObjectParser.h" />
@@ -1295,12 +1307,10 @@
     <Content Include=".vs\opengl_shenanigans\v17\ipch\AutoPCH\dee0f1ed3a87b8ba\EBO.ipch" />
     <Content Include=".vs\opengl_shenanigans\v17\ipch\AutoPCH\ea94e56f23d7f1ce\DEPENDENCIES.ipch" />
     <Content Include=".vs\opengl_shenanigans\v17\Solution.VC.db" />
+    <Content Include="Assets\Materials\mat.json" />
+    <Content Include="Assets\Materials\Material.json" />
     <Content Include="imgui.ini" />
     <Content Include="Libraries\Lib\glfw3.lib" />
-    <Content Include="Models\cube.obj" />
-    <Content Include="Models\plane.obj" />
-    <Content Include="Models\sphere.obj" />
-    <Content Include="Models\susanne.obj" />
     <Content Include="opengl_s.1b920e6d\x64\Debug\glad.obj" />
     <Content Include="opengl_s.1b920e6d\x64\Debug\glm.obj" />
     <Content Include="opengl_s.1b920e6d\x64\Debug\imgui.obj" />
@@ -1328,34 +1338,12 @@
     <Content Include="opengl_shenanigans.sln" />
     <Content Include="opengl_shenanigans.vcxproj.filters" />
     <Content Include="opengl_shenanigans.vcxproj.user" />
-    <Content Include="Source\Extentions\Material.mat" />
-    <Content Include="Source\Extentions\Material1.mat" />
-    <Content Include="Source\Extentions\Mesh.mesh" />
-    <Content Include="Source\Extentions\Mesh2.mesh" />
-    <Content Include="Source\Extentions\Mesh3.mesh" />
-    <Content Include="Source\Extentions\Object.object" />
-    <Content Include="Source\Extentions\Object1.object" />
-    <Content Include="Source\Extentions\Object2.object" />
+    <Content Include="Source\Engine\ShaderParams.h" />
+    <Content Include="Source\nativefiledialog\nfd_cocoa.m" />
     <Content Include="Source\Shaders\Lit.glsl" />
+    <Content Include="Source\Shaders\PostProcessing.glsl" />
     <Content Include="Source\Shaders\Structs.glsl" />
     <Content Include="Source\Shaders\Unlit.glsl" />
-    <Content Include="Textures\200px-Debugempty.png" />
-    <Content Include="Textures\Bricks094_2K-JPG_Color.jpg" />
-    <Content Include="Textures\Bricks094_2K-JPG_NormalDX.jpg" />
-    <Content Include="Textures\container2.png" />
-    <Content Include="Textures\container2_specular.png" />
-    <Content Include="Textures\Ground080_2K-JPG_Color.jpg" />
-    <Content Include="Textures\Ground080_2K-JPG_NormalGL.jpg" />
-    <Content Include="Textures\Ground080_2K-JPG_Roughness.jpg" />
-    <Content Include="Textures\marble-heights.png" />
-    <Content Include="Textures\Metal008_1K-JPG_Color.jpg" />
-    <Content Include="Textures\Metal008_1K-JPG_NormalDX.jpg" />
-    <Content Include="Textures\Metal017_2K-JPG_Color.jpg" />
-    <Content Include="Textures\Metal017_2K-JPG_NormalDX.jpg" />
-    <Content Include="Textures\sun.png" />
-    <Content Include="Textures\System\1x1_white.jpeg" />
-    <Content Include="Textures\wood_color.jpg" />
-    <Content Include="Textures\wood_normal.jpg" />
     <Content Include="x64\Debug\opengl_shenanigans.exe" />
     <Content Include="x64\Debug\opengl_shenanigans.pdb" />
   </ItemGroup>
@@ -1501,6 +1489,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include=".vs\opengl_shenanigans\v17\ipch\AutoPCH\930ac8a54deecee1\" />
+    <Folder Include="Assets\Meshes\" />
+    <Folder Include="Assets\Objects\" />
+    <Folder Include="Source\Engine\Input\" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -1598,6 +1589,7 @@
       <PreprocessorDefinitions>GLFW_INCLUDE_NONE;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories></AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

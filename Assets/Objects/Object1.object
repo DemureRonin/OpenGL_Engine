@@ -1,9 +1,9 @@
 {
-  "material": "Source/Extentions/Material1.mat",
-  "mesh": "Source/Extentions/Mesh2.mesh",
+  "material": "Assets/Materials/Material1.mat",
+  "mesh": "Assets/Meshes/Mesh2.mesh",
   "name": "Sphere",
   "position": [
-    1.100000023841858,
+    8.0,
     0.0,
     0.0
   ],
@@ -13,7 +13,7 @@
     0.0
   ],
   "scale": [
-    1.0,
+    1.100000023841858,
     1.0,
     1.0
   ]

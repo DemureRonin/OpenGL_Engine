@@ -1,0 +1,40 @@
+﻿{
+  "textureParams": [
+    {
+      "name": "albedo",
+      "filePath": "Assets/Textures/Metal017_2K-JPG_Color.jpg"
+    },
+    {
+      "name": "normal",
+      "filePath": "Assets/Textures/Metal017_2K-JPG_NormalDX.jpg"
+    }
+  ],
+  "floatParams": [
+    {
+      "name": "shininess",
+      "value": 0.2
+    },
+    {
+      "name": "normaScale",
+      "value": 1
+    },
+    {
+      "name": "metallicProperty",
+      "value": 0
+    }
+  ],
+  "intParams": [],
+  "vec2Params": [],
+  "vec3Params": [],
+  "vec4Params": [
+    {
+      "name": "tint",
+      "value": [
+        1,
+        1,
+        1,
+        1
+      ]
+    }
+  ]
+}

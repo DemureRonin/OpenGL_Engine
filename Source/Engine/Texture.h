@@ -4,6 +4,7 @@
 #include <iostream>
 #define WHITE_TEXTURE "Textures/System/1x1_white.jpeg"
 #define TEXTURE_LOG "[TEXTURE]"
+
 enum TextureType
 {
     ALBEDO = 0,
@@ -15,17 +16,15 @@ enum TextureType
 
 class Texture
 {
-   
-
 private:
     unsigned int m_RendererID;
     unsigned char* m_LocalBuffer;
     int m_Width, m_Height, m_BPP;
-  
+    std::string m_FilePath;
 
 public:
     TextureType m_Type;
-    std::string m_FilePath;
+    std::string GetFilePath() { return m_FilePath; }
     Texture(const std::string& filePath);
     ~Texture();
     void Bind(unsigned int slot = 0) const;

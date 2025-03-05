@@ -1,0 +1,7 @@
+#pragma once
+
+#define CONSOLE_COLOR_RESET "\033[0m"
+#define CONSOLE_COLOR_RED "\033[31m"
+#define CONSOLE_COLOR_GREEN "\033[32m"
+#define CONSOLE_COLOR_YELLOW "\033[33m"
+#define CONSOLE_COLOR_BLUE "\033[34m"

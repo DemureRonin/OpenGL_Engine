@@ -8,7 +8,7 @@
 class Model
 {
 public:
-    Model(const char* path)
+    Model(const char* path, std::string meshFile): meshFile(meshFile)
     {
         loadModel(path);
     }
@@ -20,6 +20,7 @@ private:
     // model data
 
     std::string directory;
+    std::string meshFile;
 
     void loadModel(std::string path)
     {
@@ -106,10 +107,11 @@ private:
             for (unsigned int j = 0; j < face.mNumIndices; j++)
                 indices.push_back(face.mIndices[j]);
         }
-        if (!mesh->HasTangentsAndBitangents()) {
+        if (!mesh->HasTangentsAndBitangents())
+        {
             ComputeTangents(vertices, indices);
         }
-        std::shared_ptr<Mesh> resultingMesh = std::make_shared<Mesh>(vertices, indices);
+        std::shared_ptr<Mesh> resultingMesh = std::make_shared<Mesh>(vertices, indices, meshFile);
 
         return resultingMesh;
     }

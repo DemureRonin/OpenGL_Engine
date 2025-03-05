@@ -1,0 +1,32 @@
+{
+    "floatParams": [
+        {
+            "name": "metallicProperty",
+            "value": 0.0
+        },
+        {
+            "name": "normalScale",
+            "value": 1
+        },
+        {
+            "name": "shininess",
+            "value": 0.0
+        }
+    ],
+    "intParams": [],
+    "shaderFile": "Source/Shaders/Lit.glsl",
+    "textureParams": ["Assets/Textures/200px-Debugempty.png"],
+    "vec2Params": [],
+    "vec3Params": [],
+    "vec4Params": [
+        {
+            "name": "tint",
+            "value": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ]
+        }
+    ]
+}

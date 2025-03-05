@@ -3,6 +3,18 @@
 bool Renderer::polygonMode = false;
 glm::vec4 Renderer::color = COLOR_DARK_GREY;
 
+void Renderer::EnableDepthTest(bool vl)
+{
+    if (vl)
+    {
+        glEnable(GL_DEPTH_TEST);
+    }
+    else
+    {
+        glDisable(GL_DEPTH_TEST);
+    }
+}
+
 void Renderer::SetPolygonMode()
 {
     if (polygonMode)

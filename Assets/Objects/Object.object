@@ -1,0 +1,20 @@
+{
+  "material": "Assets/Materials/mat.json",
+  "mesh": "Assets/Meshes/Mesh.mesh",
+  "name": "Sphere",
+  "position": [
+    3.9000000953674316,
+    0.0,
+    0.0
+  ],
+  "rotation": [
+    -36.0,
+    0.0,
+    0.0
+  ],
+  "scale": [
+    1.0,
+    1.0,
+    1.0
+  ]
+}

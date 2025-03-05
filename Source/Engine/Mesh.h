@@ -24,12 +24,11 @@ struct Vertex
 class Mesh
 {
 private:
-  
-    void SetupMesh();
     VertexBufferLayout m_Layout;
+    std::string m_FilePath;
+    void SetupMesh();
 
 public:
-    std::string m_FilePath;
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
     std::vector<std::shared_ptr<Texture>> textures;
@@ -37,7 +36,7 @@ public:
     VertexBuffer VBO;
     IndexBuffer EBO;
 
-    Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices);
-    void Draw(const std::shared_ptr<Material>& material) const;
+    Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const std::string& filePath);
+    void Draw() const;
     std::string GetFilePath() { return m_FilePath; }
 };

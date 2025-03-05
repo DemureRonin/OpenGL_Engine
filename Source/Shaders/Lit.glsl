@@ -96,9 +96,9 @@ void main() {
 
 	float smoothness = mix(0.0001, MAX_SMOOTHNESS_EXPONENT, material.shininess);
 	vec4 albedoTex = texture(material.albedo, interpolators.UV) * material.tint;
-	
 
-	vec3 specularTint = mix(vec3(1, 1, 1), albedoTex.rgb, material.metallicProperty); // MetallicProperty
+
+	vec3 specularTint; // MetallicProperty
 	float oneMinusReflectivity;
 	vec3 albedo = DiffuseAndSpecularFromMetallic(albedoTex.rgb, material.metallicProperty, specularTint, oneMinusReflectivity);
 	vec4 diffuse = lightColor * vec4(albedo, 1) * max(0.0, dot(lightDir, normal));
@@ -111,9 +111,9 @@ void main() {
 	specFactor = pow(specFactor, smoothness) * material.shininess;
 
 	vec4 specular = vec4(specularTint, 1.0) * lightColor * specFactor;
-	vec4 ambientLight =  vec4(0.18, 0.2, 0.26, 1) * albedoTex;
-	
-	FragColor =  ambientLight + specular + diffuse;
+	vec4 ambientLight = vec4(0.18, 0.2, 0.26, 1) * albedoTex * (1 - material.metallicProperty);
+
+	FragColor = ambientLight + specular + diffuse;
 }
 
 vec3 InitializeFragmentNormal(vec3 normal) {
@@ -122,7 +122,7 @@ vec3 InitializeFragmentNormal(vec3 normal) {
 	normalMap *= normalScale;
 
 	vec3 bitangent = cross(interpolators.Normal, interpolators.Tangent);
-	
+
 	mat3 TBN = mat3(normalize(interpolators.Tangent), normalize(bitangent), normalize(interpolators.Normal));
 	vec3 normalMapWorldSpace = normalize(TBN * normalMap);
 	return normalMapWorldSpace;

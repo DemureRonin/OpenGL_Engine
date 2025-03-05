@@ -1,6 +1,6 @@
 {
-  "material": "Source/Extentions/Material1.mat",
-  "mesh": "Source/Extentions/Mesh3.mesh",
+  "material": "Assets/Materials/Material.mat",
+  "mesh": "Assets/Meshes/Mesh3.mesh",
   "name": "Plane",
   "position": [
     6.5,

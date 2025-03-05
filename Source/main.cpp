@@ -1,20 +1,23 @@
 #define GLFW_INCLUDE_NONE
-#include "glad/glad.h"
 #include <GLFW/glfw3.h>
-
-
 #include <iostream>
 #include <glm/glm.hpp>
 
 #include "InputProcessor.h"
-#include "Engine/LitShader.h"
-#include "Engine/Mesh.h"
+
+#include "Engine/PostProcessing.h"
+#include "Engine/Buffers/FBO/FrameBuffer.h"
+#include "Engine/Buffers/RBO/RenderBufferObject.h"
+
 #include "Engine/Initialization/GLADInitializer.h"
 #include "Engine/Initialization/GLFWInitializer.h"
 #include "Engine/Initialization/ImGUIInitializer.h"
+#include "Engine/Managers/ObjectManager.h"
 #include "Engine/Time/Time.h"
+#include "nativefiledialog/nfd.h"
 #include "Utils/Primitives/CubePositions.h"
 #include "Parsers/MaterialParser.h"
+#include "Parsers/MeshParser.h"
 
 #include "Parsers/ObjectParser.h"
 #include "UI/DirectionalLightUIWindow.h"
@@ -23,8 +26,6 @@
 
 #include "UI/ObjectUIWindow.h"
 #include "UI/RendererUIWindow.h"
-
-#include "Utils/Primitives/PlanePositions.h"
 
 int main()
 {
@@ -38,72 +39,76 @@ int main()
     ImGUIInitializer::InitImGUI(window, io);
 
     if (GLADInitializer::InitGLAD()) return -1;
-    Renderer::SetBackfaceCulling();
-    auto planeMesh = std::make_shared<Mesh>(planeVertices, planeIndices);
-    std::vector<std::shared_ptr<Object>> object_hierarchy = {};
-    LitShader litShader;
+    //Renderer::SetBackfaceCulling();
+    Renderer::EnableDepthTest(true);
+
+
     DirectionalLight dirLight;
 
-    std::shared_ptr<Object> object = ObjectParser::LoadObject("Source/Extentions/Object.object", litShader);
-    std::shared_ptr<Object> sphere = ObjectParser::LoadObject("Source/Extentions/Object1.object", litShader);
-    std::shared_ptr<Object> plane = ObjectParser::LoadObject("Source/Extentions/Object2.object", litShader);
-    // std::shared_ptr<Object> plane  = ObjectParser::LoadObject("Source/Extentions/Object2.object", litShader);
 
-    object->SetMaterial(sphere->material);
-    plane->SetMaterial(sphere->material);
+    // ObjectManager::SetShader(litShader);
 
-    object_hierarchy.push_back(object);
-    object_hierarchy.push_back(sphere);
-    object_hierarchy.push_back(plane);
+    ObjectManager::LoadObject("Assets/Objects/Object.object");
+    //ObjectManager::LoadObject("Assets/Objects/Object1.object");
+    //ObjectManager::LoadObject("Assets/Objects/Object2.object");
 
-    std::map<std::shared_ptr<Material>, std::vector<std::shared_ptr<Object>>> materialObjectMap;
-    for (const auto& obj : object_hierarchy)
-    {
-        materialObjectMap[obj->material].push_back(obj);
-    }
+    //  ObjectManager::InitMaterialMap();
 
+    //  auto map = Shader::ParseShaderMaterialFloats("Source/Shaders/Lit.glsl");
+    // Shader::SaveShaderParamsToJson(map, "Assets/Materials/mat.json");
+
+
+    PostProcessing postProcessing;
     while (!glfwWindowShouldClose(window))
     {
         Time::Tick();
 
         ImGUIInitializer::NewFrame();
 
-        Renderer::Clear();
+
         Renderer::SetPolygonMode();
         InputProcessor::ProcessInput(window, camera);
+        if (!Renderer::polygonMode)
+            postProcessing.FBO.Bind();
+        Renderer::EnableDepthTest(true);
+        Renderer::Clear();
 
-        litShader.shader->Bind();
-        litShader.SetDirectionalLightUniforms(dirLight);
-        
-        for (const auto& pair : materialObjectMap)
+        // litShader->shader->Bind();
+        //litShader->SetDirectionalLightUniforms(dirLight);
+
+        for (const auto& pair : ObjectManager::materialObjectMap)
         {
             std::shared_ptr<Material> material = pair.first;
             std::vector<std::shared_ptr<Object>> objs = pair.second;
-            litShader.SetMaterialUniforms(material);
+            material->shader->Bind();
+            material->shader->SetMaterialUniforms(material);
 
             for (const auto& obj : objs)
             {
                 if (obj->mesh == nullptr) continue;
-                litShader.SetObjectUniforms(*camera, *obj);
+                material->shader->SetObjectUniforms(*camera, *obj);
                 obj->Draw();
             }
         }
-      
+        if (!Renderer::polygonMode)
+            postProcessing.RenderPostProcessing();
 
         ObjectUIWindow::Render();
-        HierarchyUIWindow::Render(object_hierarchy);
+        HierarchyUIWindow::Render(ObjectManager::object_hierarchy);
         RendererUIWindow::Render();
         DirectionalLightUIWindow::Render(dirLight);
-        MaterialUIWindow::Render(*object->material);
+        if (ObjectUIWindow::activeUIObject && ObjectUIWindow::activeUIObject->material)
+            MaterialUIWindow::Render(*ObjectUIWindow::activeUIObject->material);
+
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-    for (const auto& obj : object_hierarchy)
+    for (const auto& obj : ObjectManager::object_hierarchy)
     {
-        ObjectParser::SaveObject(obj->GetFilePath().c_str(), obj);
+        //  ObjectParser::SaveObject(obj->GetFilePath().c_str(), obj);
     }
     ImGUIInitializer::ShutdownImGUI();
 
