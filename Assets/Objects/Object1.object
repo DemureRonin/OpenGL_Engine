@@ -1,5 +1,5 @@
 {
-  "material": "Assets/Materials/Material1.mat",
+  "material": "Assets/Materials/mat.json",
   "mesh": "Assets/Meshes/Mesh2.mesh",
   "name": "Sphere",
   "position": [

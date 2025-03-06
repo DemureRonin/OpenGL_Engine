@@ -1,5 +1,7 @@
 ﻿#include "FrameBuffer.h"
 
+#include <iostream>
+
 FrameBuffer::FrameBuffer()
 {
     glGenFramebuffers(1, &m_RendererID);

@@ -28,15 +28,15 @@ public:
         mesh->Draw();
     }
 
-    void SetMesh(const std::shared_ptr<Mesh>& newMesh)
+    void SetMesh(const std::shared_ptr<Mesh> newMesh)
     {
-        this->mesh.reset();
+       
         this->mesh = newMesh;
     }
 
-    void SetMaterial(const std::shared_ptr<Material>& newMaterial)
+    void SetMaterial(const std::shared_ptr<Material> newMaterial)
     {
-        this->material.reset();
+        
         this->material = newMaterial;
     }
 };

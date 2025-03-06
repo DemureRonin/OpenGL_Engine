@@ -1,5 +1,7 @@
 ﻿#include "MeshParser.h"
 
+#include <fstream>
+
 #include "../Engine/ConsoleDebug/ConsoleDebug.h"
 #include "../Utils/json.h"
 const char* MeshParser::m_DebugName = "MESH_PARSER";

@@ -1,32 +1,31 @@
-﻿#ifndef SHADER_H
-#define SHADER_H
-
+﻿#pragma once
 #include <string>
+#include <ostream>
 
-#include "Camera.h"
-#include "DirectionalLight.h"
-#include "Material.h"
-#include "Object.h"
-#include "ProgramObject.h"
-#include "ShaderParams.h"
-#include "glm/fwd.hpp"
 
 #include <fstream>
-#include <map>
-#include <regex>
+#include <iostream>
 
+#include "glad/glad.h"
+#include "glm/vec4.hpp"
 #include "glm/gtc/type_ptr.hpp"
-#include "../Utils/json.h"
 #include <sstream>
 
+#include "DirectionalLight.h"
+
+#include "ProgramObject.h"
 
 #define SHADER_LIT "Source/Shaders/Lit.glsl"
 #define SHADER_UNLIT "Source/Shaders/Unlit.glsl"
 
+class Object;
+class Camera;
+class Material;
+
 class Shader : public ProgramObject
 {
-/*public:
-    ShaderParams shaderParams;
+public:
+  //  std::shared_ptr<ShaderParams> shaderParams;
     Shader(const char* filePath = SHADER_LIT);
     void Bind() const override;
     void Unbind() const override;
@@ -41,8 +40,6 @@ class Shader : public ProgramObject
     void SetMaterialUniforms(const std::shared_ptr<Material>& material) const;
     void SetObjectUniforms(const Camera& camera, const Object& object) const;
     void SetDirectionalLightUniforms(const DirectionalLight& dirLight) const;
-    static ShaderParams ParseShaderMaterialFloats(const std::string& filePath);
-    static void SaveShaderParamsToJson(const ShaderParams& params, const std::string& filePath);
 
 private:
     struct ShaderProgramSource
@@ -52,7 +49,5 @@ private:
 
     ShaderProgramSource ParseShader(const std::string& filePath);
 
-    void CheckCompileErrors(unsigned int shader, std::string type);*/
+    void CheckCompileErrors(unsigned int shader, std::string type);
 };
-
-#endif

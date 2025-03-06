@@ -2,6 +2,7 @@
 
 #include <memory>
 
+
 #include "Shader.h"
 #include "ShaderParams.h"
 
@@ -13,11 +14,13 @@ private:
 
 public:
     std::shared_ptr<Shader> shader = nullptr;
-     ShaderParams shaderParams;
+    std::shared_ptr<ShaderParams> shaderParams;
 
 
-    Material(unsigned int ID,  std::shared_ptr<Shader> sh, ShaderParams& params): m_ID(ID), shaderParams(params)
+    Material(unsigned int ID, std::shared_ptr<Shader> sh,
+             std::shared_ptr<ShaderParams>& params): m_ID(ID)
     {
+        shaderParams = params;
         shader = sh;
     }
 

@@ -23,9 +23,9 @@ std::shared_ptr<Material> MaterialParser::LoadMaterial(const char* filePath)
         std::cerr << "JSON parse error: " << e.what() << std::endl;
         return nullptr;
     }
-    ShaderParams params;
+    std::shared_ptr<ShaderParams> params = std::make_shared<ShaderParams>();
     // Parse shader file
-    params.shaderFile = data.value("shaderFile", "");
+    params->shaderFile = data.value("shaderFile", "");
 
     // Parse float parameters
     if (data.contains("floatParams") && data["floatParams"].is_array())
@@ -34,7 +34,7 @@ std::shared_ptr<Material> MaterialParser::LoadMaterial(const char* filePath)
         {
             if (param.contains("name") && param.contains("value"))
             {
-                params.floatParameters[param["name"].get<std::string>()] = param["value"].get<float>();
+                params->floatParameters[param["name"].get<std::string>()] = param["value"].get<float>();
             }
         }
     }
@@ -46,7 +46,7 @@ std::shared_ptr<Material> MaterialParser::LoadMaterial(const char* filePath)
         {
             if (param.contains("name") && param.contains("value"))
             {
-                params.intParameters[param["name"].get<std::string>()] = param["value"].get<int>();
+                params->intParameters[param["name"].get<std::string>()] = param["value"].get<int>();
             }
         }
     }
@@ -59,7 +59,7 @@ std::shared_ptr<Material> MaterialParser::LoadMaterial(const char* filePath)
             if (param.contains("name") && param.contains("value") && param["value"].is_array() && param["value"].size()
                 == 2)
             {
-                params.vec2Parameters[param["name"].get<std::string>()] = glm::vec2(
+                params->vec2Parameters[param["name"].get<std::string>()] = glm::vec2(
                     param["value"][0].get<float>(),
                     param["value"][1].get<float>()
                 );
@@ -75,7 +75,7 @@ std::shared_ptr<Material> MaterialParser::LoadMaterial(const char* filePath)
             if (param.contains("name") && param.contains("value") && param["value"].is_array() && param["value"].size()
                 == 3)
             {
-                params.vec3Parameters[param["name"].get<std::string>()] = glm::vec3(
+                params->vec3Parameters[param["name"].get<std::string>()] = glm::vec3(
                     param["value"][0].get<float>(),
                     param["value"][1].get<float>(),
                     param["value"][2].get<float>()
@@ -92,7 +92,7 @@ std::shared_ptr<Material> MaterialParser::LoadMaterial(const char* filePath)
             if (param.contains("name") && param.contains("value") && param["value"].is_array() && param["value"].size()
                 == 4)
             {
-                params.vec4Parameters[param["name"].get<std::string>()] = glm::vec4(
+                params->vec4Parameters[param["name"].get<std::string>()] = glm::vec4(
                     param["value"][0].get<float>(),
                     param["value"][1].get<float>(),
                     param["value"][2].get<float>(),
@@ -103,29 +103,32 @@ std::shared_ptr<Material> MaterialParser::LoadMaterial(const char* filePath)
     }
 
     // Parse texture parameters
-    if (data.contains("textureParams") && data["textureParams"].is_array())
+    if (data.contains("textureParams") && data["textureParams"].is_array()) 
     {
-        if (data["textureParams"].empty())
+        if (data["textureParams"].empty()) 
         {
-            params.textureParameters[0] = TextureManager::LoadTexture(WHITE_TEXTURE);
+            params->textureParameters["default"] = TextureManager::LoadTexture(WHITE_TEXTURE);
             std::cout << "No textures found in the material file." << std::endl;
-        }
-        else
+        } 
+        else 
         {
-            for (const auto& param : data["textureParams"])
+            for (const auto& textureEntry : data["textureParams"]) 
             {
-                if (param.contains("name") && param.contains("filePath"))
+                if (textureEntry.is_object()) // Each entry should be an object
                 {
-                    std::string name = param["name"].get<std::string>();
-                    std::string texturePath = param["filePath"].get<std::string>();
+                    for (auto it = textureEntry.begin(); it != textureEntry.end(); ++it)
+                    {
+                        std::string type = it.key(); // Texture type (e.g., "albedo", "normal")
+                        std::string path = it.value().get<std::string>(); // Texture file path
 
-                    // Load texture and store as shared_ptr
-                    params.textureParameters[name] = TextureManager::LoadTexture(texturePath);
+                        // Load the texture and store it with its type as the key
+                        params->textureParameters[type] = TextureManager::LoadTexture(path);
+                    }
                 }
             }
         }
     }
-    auto shader = std::make_shared<Shader>(params.shaderFile.c_str());
+    auto shader = std::make_shared<Shader>(params->shaderFile.c_str());
     auto mat = std::make_shared<Material>(m_IDCount++, shader, params);
 
     return mat;

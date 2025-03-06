@@ -39,26 +39,20 @@ int main()
     ImGUIInitializer::InitImGUI(window, io);
 
     if (GLADInitializer::InitGLAD()) return -1;
-    //Renderer::SetBackfaceCulling();
+    Renderer::SetBackfaceCulling();
     Renderer::EnableDepthTest(true);
 
 
     DirectionalLight dirLight;
 
-
-    // ObjectManager::SetShader(litShader);
-
     ObjectManager::LoadObject("Assets/Objects/Object.object");
-    //ObjectManager::LoadObject("Assets/Objects/Object1.object");
-    //ObjectManager::LoadObject("Assets/Objects/Object2.object");
+     ObjectManager::LoadObject("Assets/Objects/Object1.object");
+    ObjectManager::LoadObject("Assets/Objects/Object2.object");
 
-    //  ObjectManager::InitMaterialMap();
-
-    //  auto map = Shader::ParseShaderMaterialFloats("Source/Shaders/Lit.glsl");
-    // Shader::SaveShaderParamsToJson(map, "Assets/Materials/mat.json");
+    ObjectManager::InitMaterialMap();
 
 
-    PostProcessing postProcessing;
+    PostProcessing postProcessing = PostProcessing();
     while (!glfwWindowShouldClose(window))
     {
         Time::Tick();
@@ -68,13 +62,12 @@ int main()
 
         Renderer::SetPolygonMode();
         InputProcessor::ProcessInput(window, camera);
+
+
         if (!Renderer::polygonMode)
-            postProcessing.FBO.Bind();
+         //   postProcessing.FBO.Bind();
         Renderer::EnableDepthTest(true);
         Renderer::Clear();
-
-        // litShader->shader->Bind();
-        //litShader->SetDirectionalLightUniforms(dirLight);
 
         for (const auto& pair : ObjectManager::materialObjectMap)
         {
@@ -82,6 +75,8 @@ int main()
             std::vector<std::shared_ptr<Object>> objs = pair.second;
             material->shader->Bind();
             material->shader->SetMaterialUniforms(material);
+            material->shader->SetDirectionalLightUniforms(dirLight);
+
 
             for (const auto& obj : objs)
             {
@@ -91,7 +86,7 @@ int main()
             }
         }
         if (!Renderer::polygonMode)
-            postProcessing.RenderPostProcessing();
+          //  postProcessing.RenderPostProcessing();
 
         ObjectUIWindow::Render();
         HierarchyUIWindow::Render(ObjectManager::object_hierarchy);

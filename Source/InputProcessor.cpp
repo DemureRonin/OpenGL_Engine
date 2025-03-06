@@ -1,5 +1,7 @@
 ﻿#include "InputProcessor.h"
 
+#include <memory>
+
 #include "Engine/Time/Time.h"
 
 std::shared_ptr<Camera> InputProcessor::ipcamera = nullptr;

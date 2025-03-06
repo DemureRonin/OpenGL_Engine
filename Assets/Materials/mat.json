@@ -1,32 +1,39 @@
 {
-    "floatParams": [
-        {
-            "name": "metallicProperty",
-            "value": 0.0
-        },
-        {
-            "name": "normalScale",
-            "value": 1
-        },
-        {
-            "name": "shininess",
-            "value": 0.0
-        }
-    ],
-    "intParams": [],
-    "shaderFile": "Source/Shaders/Lit.glsl",
-    "textureParams": ["Assets/Textures/200px-Debugempty.png"],
-    "vec2Params": [],
-    "vec3Params": [],
-    "vec4Params": [
-        {
-            "name": "tint",
-            "value": [
-                0.0,
-                0.0,
-                0.0,
-                0.0
-            ]
-        }
-    ]
+  "floatParams": [
+    {
+      "name": "metallicProperty",
+      "value": 0.3
+    },
+    {
+      "name": "normalScale",
+      "value": 0
+    },
+    {
+      "name": "shininess",
+      "value": 1.0
+    }
+  ],
+  "intParams": [],
+  "shaderFile": "Source/Shaders/Lit.glsl",
+  "textureParams": [
+    {
+      "albedo": "Assets/Textures/Metal017_2K-JPG_Color.jpg"
+    },
+    {
+      "normal": "Assets/Textures/Metal017_2K-JPG_NormalDX.jpg"
+    }
+  ],
+  "vec2Params": [],
+  "vec3Params": [],
+  "vec4Params": [
+    {
+      "name": "tint",
+      "value": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    }
+  ]
 }

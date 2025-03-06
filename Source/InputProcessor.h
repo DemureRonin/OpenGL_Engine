@@ -1,4 +1,6 @@
 ﻿#pragma once
+#include <memory>
+
 #include "Engine/Camera.h"
 #include "Engine/Renderer.h"
 #include "GLFW/glfw3.h"
