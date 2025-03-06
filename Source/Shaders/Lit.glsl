@@ -117,7 +117,7 @@ void main() {
 }
 
 vec3 InitializeFragmentNormal(vec3 normal) {
-	float normalScale = 0.1;
+	float normalScale = 1;
 	
 	vec3 normalMap = (texture(material.normal, interpolators.UV).rgb * 2 - 1);
 	normalMap *= normalScale;

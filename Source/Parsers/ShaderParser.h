@@ -2,7 +2,7 @@
 #include <fstream>
 #include <regex>
 
-#include "ShaderParams.h"
+#include "../Engine/ShaderParams.h"
 #include "../Utils/json.h"
 
 class ShaderParser

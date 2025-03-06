@@ -8,8 +8,9 @@
 class TextureManager
 {
 private:
-    static std::vector<std::shared_ptr<Texture>> textures;
+    static std::unordered_map<std::string, std::shared_ptr<Texture>> textures;
 
 public:
     static std::shared_ptr<Texture> LoadTexture(const std::string& filePath);
+    static std::shared_ptr<Texture> GetTexture(const std::string& filePath);
 };

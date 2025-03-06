@@ -1,26 +1,29 @@
 ﻿#include "TextureManager.h"
-std::vector<std::shared_ptr<Texture>> TextureManager::textures{};
+std::unordered_map<std::string, std::shared_ptr<Texture>> TextureManager::textures{};
 
 std::shared_ptr<Texture> TextureManager::LoadTexture(const std::string& filePath)
 {
-    for (size_t i = 0; i < textures.size(); i++)
+    auto existingTexture = GetTexture(filePath);
+    if (existingTexture)
+        return existingTexture;
+
+    std::shared_ptr<Texture> newTexture = std::make_shared<Texture>(filePath);
+    if (!newTexture)
     {
-        if (textures[i]->GetFilePath() == filePath)
-        {
-            std::cout << TEXTURE_MANAGER_LOG "Texture " << filePath << " exists, returning" << '\n';
-            return textures[i];
-        }
+        newTexture = std::make_shared<Texture>(WHITE_TEXTURE);
+        std::cout << TEXTURE_MANAGER_LOG "Texture " << filePath << " failed to load" << '\n';
     }
-    std::cout << TEXTURE_MANAGER_LOG "Texture " << filePath << " doesn't exist, loading" << '\n';
-    auto texture = std::make_shared<Texture>(filePath);
-    if (!texture->IsLoaded())
+    textures[filePath] = newTexture;
+    return newTexture;
+}
+
+std::shared_ptr<Texture> TextureManager::GetTexture(const std::string& filePath)
+{
+    auto it = textures.find(filePath);
+    if (it != textures.end())
     {
-        texture.reset();
-        std::cerr << TEXTURE_MANAGER_LOG "\033[31mFailed to load texture " << filePath <<
-            ", falling back to white\033[0m" << '\n';
-        texture = std::make_shared<Texture>(WHITE_TEXTURE);
+        std::cout << TEXTURE_MANAGER_LOG "Texture " << filePath << " exists, returning" << '\n';
+        return it->second;
     }
-    textures.push_back(texture);
-    std::cout << TEXTURE_MANAGER_LOG "Texture " << filePath << " loaded" << '\n';
-    return texture;
+    return nullptr;
 }

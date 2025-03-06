@@ -246,7 +246,9 @@
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
     <ClCompile Include="Source\Engine\ConsoleDebug\ConsoleDebug.cpp" />
+    <ClCompile Include="Source\Engine\Managers\MaterialManager.cpp" />
     <ClCompile Include="Source\Engine\Managers\ObjectManager.cpp" />
+    <ClCompile Include="Source\Engine\Managers\ShaderManager.cpp" />
     <ClCompile Include="Source\Engine\Managers\TextureManager.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -1169,7 +1171,9 @@
     <ClInclude Include="Source\Engine\Initialization\GLADInitializer.h" />
     <ClInclude Include="Source\Engine\Initialization\GLFWInitializer.h" />
     <ClInclude Include="Source\Engine\Initialization\ImGUIInitializer.h" />
+    <ClInclude Include="Source\Engine\Managers\MaterialManager.h" />
     <ClInclude Include="Source\Engine\Managers\ObjectManager.h" />
+    <ClInclude Include="Source\Engine\Managers\ShaderManager.h" />
     <ClInclude Include="Source\Engine\Managers\TextureManager.h" />
     <ClInclude Include="Source\Engine\Material.h" />
     <ClInclude Include="Source\Engine\Mesh.h" />
@@ -1206,6 +1210,7 @@
     <ClInclude Include="Source\UI\MaterialUIWindow.h" />
     <ClInclude Include="Source\UI\ObjectUIWindow.h" />
     <ClInclude Include="Source\UI\RendererUIWindow.h" />
+    <ClInclude Include="Source\UI\Toolbar.h" />
     <ClInclude Include="Source\Utils\Colors.h" />
     <ClInclude Include="Source\Utils\json.h" />
     <ClInclude Include="Source\Utils\Primitives\CubePositions.h" />
@@ -1235,6 +1240,7 @@
     <Content Include=".vs\opengl_shenanigans\v17\ipch\AutoPCH\dee0f1ed3a87b8ba\EBO.ipch" />
     <Content Include=".vs\opengl_shenanigans\v17\ipch\AutoPCH\ea94e56f23d7f1ce\DEPENDENCIES.ipch" />
     <Content Include=".vs\opengl_shenanigans\v17\Solution.VC.db" />
+    <Content Include="Assets\Fonts\0xProtoNerdFontMono-Regular.ttf" />
     <Content Include="Assets\Materials\mat.json" />
     <Content Include="Assets\Materials\Material.json" />
     <Content Include="imgui.ini" />
@@ -1270,8 +1276,6 @@
     <Content Include="Source\nativefiledialog\nfd_cocoa.m" />
     <Content Include="Source\Shaders\Lit.glsl" />
     <Content Include="Source\Shaders\PostProcessing.glsl" />
-    <Content Include="Source\Shaders\Structs.glsl" />
-    <Content Include="Source\Shaders\Unlit.glsl" />
     <Content Include="x64\Debug\opengl_shenanigans.exe" />
     <Content Include="x64\Debug\opengl_shenanigans.pdb" />
   </ItemGroup>

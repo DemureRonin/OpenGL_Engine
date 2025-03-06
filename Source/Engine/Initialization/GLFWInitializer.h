@@ -7,7 +7,7 @@
 
 inline void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-    glViewport(0, 0, width, height);
+    glViewport(500, 100, width-100, height-100);
 }
 class GLFWInitializer
 {

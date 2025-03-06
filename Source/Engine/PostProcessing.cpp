@@ -1,9 +1,11 @@
 ﻿#include "PostProcessing.h"
 
+#include "Managers/ShaderManager.h"
+
 
 PostProcessing::PostProcessing()
 {
-    postShader = std::make_shared<Shader>("Source/Shaders/PostProcessing.glsl");
+    postShader = ShaderManager::GetShader("Source/Shaders/PostProcessing.glsl");
     postShader->Bind();
     postShader->SetInt("screenTexture", 0);
 

@@ -1,5 +1,7 @@
 ﻿#include "MaterialParser.h"
 
+#include "../Engine/Managers/ShaderManager.h"
+
 unsigned int MaterialParser::m_IDCount = 0;
 std::vector<std::shared_ptr<Material>> MaterialParser::materials{};
 const char* MaterialParser::m_DebugName = "MATERIAL_PARSER";
@@ -103,16 +105,16 @@ std::shared_ptr<Material> MaterialParser::LoadMaterial(const char* filePath)
     }
 
     // Parse texture parameters
-    if (data.contains("textureParams") && data["textureParams"].is_array()) 
+    if (data.contains("textureParams") && data["textureParams"].is_array())
     {
-        if (data["textureParams"].empty()) 
+        if (data["textureParams"].empty())
         {
             params->textureParameters["default"] = TextureManager::LoadTexture(WHITE_TEXTURE);
             std::cout << "No textures found in the material file." << std::endl;
-        } 
-        else 
+        }
+        else
         {
-            for (const auto& textureEntry : data["textureParams"]) 
+            for (const auto& textureEntry : data["textureParams"])
             {
                 if (textureEntry.is_object()) // Each entry should be an object
                 {
@@ -128,7 +130,7 @@ std::shared_ptr<Material> MaterialParser::LoadMaterial(const char* filePath)
             }
         }
     }
-    auto shader = std::make_shared<Shader>(params->shaderFile.c_str());
+    auto shader = ShaderManager::GetShader(params->shaderFile.c_str());
     auto mat = std::make_shared<Material>(m_IDCount++, shader, params);
 
     return mat;

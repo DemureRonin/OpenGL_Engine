@@ -8,6 +8,7 @@
 
 Shader::Shader(const char* filePath)
 {
+    m_filePath = filePath;
     const auto shaderSource = ParseShader(filePath);
 
     const char* vShaderCode = shaderSource.vertex.c_str();
@@ -90,14 +91,12 @@ void Shader::SetMaterialUniforms(const std::shared_ptr<Material>& material) cons
 {
     std::shared_ptr<ShaderParams> params = material->shaderParams;
 
-    // Set float uniforms
     for (const auto& floatParam : params->floatParameters)
     {
         std::string paramName = "material." + floatParam.first;
         SetFloat(paramName, floatParam.second);
     }
 
-    // Set integer uniforms
     for (const auto& intParam : params->intParameters)
     {
         std::string paramName = "material." + intParam.first;
@@ -107,36 +106,27 @@ void Shader::SetMaterialUniforms(const std::shared_ptr<Material>& material) cons
     int textureSlot = 0;
     for (const auto& texturePair : params->textureParameters)
     {
-        if (texturePair.second) // Ensure texture is valid
+        if (texturePair.second)
         {
-            
             std::string paramName = "material." + texturePair.first;
-            std::cout << "TEXNAME" << paramName << std::endl;
-            std::cout << "SLOT" << textureSlot << std::endl;
-            
-            
-            texturePair.second->Bind(textureSlot); // Bind texture to slot
-            SetInt(paramName, textureSlot); // Set uniform sampler2D slot
-
-           
+            texturePair.second->Bind(textureSlot);
+            SetInt(paramName, textureSlot);
         }
         textureSlot++;
     }
-    // Set vec2 uniforms
+
     for (const auto& vec2Param : params->vec2Parameters)
     {
         std::string paramName = "material." + vec2Param.first;
         SetVec2(paramName, vec2Param.second);
     }
 
-    // Set vec3 uniforms
     for (const auto& vec3Param : params->vec3Parameters)
     {
         std::string paramName = "material." + vec3Param.first;
         SetVec3(paramName, vec3Param.second);
     }
 
-    // Set vec4 uniforms
     for (const auto& vec4Param : params->vec4Parameters)
     {
         std::string paramName = "material." + vec4Param.first;
@@ -147,7 +137,8 @@ void Shader::SetMaterialUniforms(const std::shared_ptr<Material>& material) cons
 void Shader::SetObjectUniforms(const Camera& camera, const Object& object) const
 {
     glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom),
-                                            static_cast<float>(1920) / static_cast<float>(1080), 0.1f, 1000.0f);
+                                            static_cast<float>(camera.aspectX) / static_cast<float>(camera.aspectY),
+                                            0.1f, 1000.0f);
     glm::mat4 view = camera.GetViewMatrix();
     glm::mat4 Mmat4 = object.transform.modelMatrix;
     glm::mat4 Vmat4 = view;

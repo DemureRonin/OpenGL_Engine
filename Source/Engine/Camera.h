@@ -31,7 +31,7 @@ const float ZOOM = 45.0f;
 class Camera
 {
 public:
-     float speed = 2.5f;
+    float speed = 2.5f;
     // camera Attributes
     glm::vec3 Position;
     glm::vec3 Front;
@@ -46,9 +46,15 @@ public:
     float MouseSensitivity;
     float Zoom;
     bool freeFly = true;
+    int aspectX;
+    int aspectY;
 
     // constructor with vectors
-    Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(speed), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
+    Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
+           float yaw = YAW, float pitch = PITCH, int aspectX = 1600,
+           int aspectY = 900) : Front(glm::vec3(0.0f, 0.0f, -1.0f)),
+                                MovementSpeed(speed),
+                                MouseSensitivity(SENSITIVITY), Zoom(ZOOM), aspectX(aspectX), aspectY(aspectY)
     {
         Position = position;
         WorldUp = up;
@@ -58,7 +64,8 @@ public:
     }
 
     // constructor with scalar values
-    Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(speed), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
+    Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch) :
+        Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(speed), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
     {
         Position = glm::vec3(posX, posY, posZ);
         WorldUp = glm::vec3(upX, upY, upZ);
@@ -122,7 +129,8 @@ private:
         front.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
         Front = glm::normalize(front);
         // also re-calculate the Right and Up vector
-        Right = glm::normalize(glm::cross(Front, WorldUp)); // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+        Right = glm::normalize(glm::cross(Front, WorldUp));
+        // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
         Up = glm::normalize(glm::cross(Right, Front));
     }
 };

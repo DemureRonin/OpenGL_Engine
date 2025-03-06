@@ -7,6 +7,7 @@
 #include "../Engine/ConsoleDebug/ConsoleDebug.h"
 #include "../Utils/json.h"
 #include "../Engine/Material.h"
+#include "../Parsers/ShaderParser.h"
 
 #include "../Engine/Managers/TextureManager.h"
 using json = nlohmann::json;

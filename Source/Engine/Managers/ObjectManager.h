@@ -12,8 +12,6 @@
 class ObjectManager
 {
 public:
-  
-
     static std::map<std::shared_ptr<Material>, std::vector<std::shared_ptr<Object>>> materialObjectMap;
     static std::vector<std::shared_ptr<Object>> object_hierarchy;
     static void AddObject(const std::shared_ptr<Object>& object);

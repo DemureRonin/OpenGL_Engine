@@ -4,6 +4,7 @@
 #include "MeshParser.h"
 #include "../Engine/ConsoleDebug/ConsoleDebug.h"
 #include "../Engine/ConsoleDebug/DebugUtils.h"
+#include "../Engine/Managers/MaterialManager.h"
 const char* ObjectParser::m_DebugName = "OBJECT_PARSER";
 
 std::shared_ptr<Object> ObjectParser::CreateErrorObject()
@@ -53,7 +54,7 @@ int ObjectParser::LoadObject(const char* filePath,
 
     std::shared_ptr<Object> createdObject = std::make_shared<Object>(name, position, rotation, scale, true, filePath);
     std::shared_ptr<Mesh> objectMesh = MeshParser::ParseMesh(mesh.c_str());
-    std::shared_ptr<Material> objectMat = MaterialParser::LoadMaterial(material.c_str());
+    std::shared_ptr<Material> objectMat = MaterialManager::LoadMaterial(material.c_str());
 
     if (objectMesh != nullptr)
         createdObject->SetMesh(objectMesh);

@@ -24,9 +24,13 @@ class Material;
 
 class Shader : public ProgramObject
 {
+private:
+    std::string m_filePath;
+
 public:
-  //  std::shared_ptr<ShaderParams> shaderParams;
+    //  std::shared_ptr<ShaderParams> shaderParams;
     Shader(const char* filePath = SHADER_LIT);
+    std::string GetFilePath() { return m_filePath; };
     void Bind() const override;
     void Unbind() const override;
     void SetBool(const std::string& name, bool value) const;

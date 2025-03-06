@@ -13,6 +13,7 @@
 #include "Engine/Initialization/GLFWInitializer.h"
 #include "Engine/Initialization/ImGUIInitializer.h"
 #include "Engine/Managers/ObjectManager.h"
+#include "Engine/Managers/ShaderManager.h"
 #include "Engine/Time/Time.h"
 #include "nativefiledialog/nfd.h"
 #include "Utils/Primitives/CubePositions.h"
@@ -26,6 +27,9 @@
 
 #include "UI/ObjectUIWindow.h"
 #include "UI/RendererUIWindow.h"
+#include "UI/Toolbar.h"
+#include "Utils/Colors.h"
+void SetModernDarkTheme();
 
 int main()
 {
@@ -33,10 +37,18 @@ int main()
     if (!window) return -1;
 
     auto camera = std::make_shared<Camera>(glm::vec3(0.0f, 0.0f, 3.0f));
+    int width, height;
+    glfwGetFramebufferSize(window, &width, &height);
+
+    camera->aspectX = (width);
+    camera->aspectY = (height);
+
     InputProcessor::InitCallbacks(window, camera);
 
     ImGuiIO io;
+    
     ImGUIInitializer::InitImGUI(window, io);
+    io.Fonts->AddFontFromFileTTF("Assets/Fonts/0xProtoNerdFontMono-Regular.ttf", 15.0f);
 
     if (GLADInitializer::InitGLAD()) return -1;
 
@@ -44,11 +56,16 @@ int main()
 
     DirectionalLight dirLight;
 
+    ShaderManager::LoadShaders("Source/Shaders");
+
+
     ObjectManager::LoadObject("Assets/Objects/Object.object");
     // ObjectManager::LoadObject("Assets/Objects/Object1.object");
     //ObjectManager::LoadObject("Assets/Objects/Object2.object");
 
     PostProcessing postProcessing = PostProcessing();
+    SetModernDarkTheme();
+
     while (!glfwWindowShouldClose(window))
     {
         Time::Tick();
@@ -56,15 +73,28 @@ int main()
         ImGUIInitializer::NewFrame();
 
 
+        /*int uiOffsetX = 300;  // Space reserved for UI on the left
+        int uiOffsetY = 300;    // No offset on Y (UI on side)
+        int viewportWidth = 1000 - uiOffsetX;
+        int viewportHeight = 1000 - uiOffsetY;
+        glViewport(uiOffsetX, uiOffsetY, viewportWidth, viewportHeight);*/
+
+
         Renderer::SetPolygonMode();
         Renderer::SetBackfaceCulling(true);
         InputProcessor::ProcessInput(window, camera);
 
-        if (!Renderer::polygonMode)
-            postProcessing.FBO.Bind();
+        // if (!Renderer::polygonMode)
+        //    postProcessing.FBO.Bind();
         Renderer::EnableDepthTest(true);
         Renderer::Clear();
 
+
+        glfwGetFramebufferSize(window, &width, &height);
+
+        camera->aspectX = (width);
+        camera->aspectY = (height);
+        glViewport(0, 0, width, height);
         for (const auto& pair : ObjectManager::materialObjectMap)
         {
             std::shared_ptr<Material> material = pair.first;
@@ -82,17 +112,18 @@ int main()
             }
         }
 
-        if (!Renderer::polygonMode)
-            postProcessing.RenderPostProcessing();
+        //  if (!Renderer::polygonMode)
+        //     postProcessing.RenderPostProcessing();
 
+        Toolbar::Render();
+       // ObjectUIWindow::Render();
+        //HierarchyUIWindow::Render(ObjectManager::object_hierarchy);
+      //  RendererUIWindow::Render();
+      //  DirectionalLightUIWindow::Render(dirLight);
+      //  if (ObjectUIWindow::activeUIObject && ObjectUIWindow::activeUIObject->material)
+       //     MaterialUIWindow::Render(*ObjectUIWindow::activeUIObject->material);
 
-        ObjectUIWindow::Render();
-        HierarchyUIWindow::Render(ObjectManager::object_hierarchy);
-        RendererUIWindow::Render();
-        DirectionalLightUIWindow::Render(dirLight);
-        if (ObjectUIWindow::activeUIObject && ObjectUIWindow::activeUIObject->material)
-            MaterialUIWindow::Render(*ObjectUIWindow::activeUIObject->material);
-
+        // glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -107,4 +138,29 @@ int main()
 
     glfwTerminate();
     return 0;
+}
+
+void SetModernDarkTheme()
+{
+    ImGuiStyle& style = ImGui::GetStyle();
+    ImVec4* colors = style.Colors;
+
+    colors[ImGuiCol_WindowBg] = ImVec4(0.10f, 0.10f, 0.10f, 1.0f); // Dark background
+    colors[ImGuiCol_FrameBg] = ImVec4(0.16f, 0.16f, 0.16f, 1.0f);
+    colors[ImGuiCol_FrameBgHovered] = ImVec4(0.26f, 0.26f, 0.26f, 1.0f);
+    colors[ImGuiCol_FrameBgActive] = ImVec4(0.30f, 0.30f, 0.30f, 1.0f);
+    colors[ImGuiCol_Button] = ImVec4(0.20f, 0.20f, 0.20f, 1.0f);
+    colors[ImGuiCol_ButtonHovered] = ImVec4(0.30f, 0.30f, 0.30f, 1.0f);
+    colors[ImGuiCol_ButtonActive] = ImVec4(0.40f, 0.40f, 0.40f, 1.0f);
+    colors[ImGuiCol_Header] = ImVec4(0.20f, 0.25f, 0.30f, 1.0f);
+    colors[ImGuiCol_HeaderHovered] = ImVec4(0.30f, 0.35f, 0.40f, 1.0f);
+    colors[ImGuiCol_HeaderActive] = ImVec4(0.35f, 0.40f, 0.45f, 1.0f);
+    colors[ImGuiCol_Tab] = ImVec4(0.20f, 0.20f, 0.20f, 1.0f);
+    colors[ImGuiCol_TabHovered] = ImVec4(0.25f, 0.25f, 0.25f, 1.0f);
+    colors[ImGuiCol_TabActive] = ImVec4(0.30f, 0.30f, 0.30f, 1.0f);
+
+    style.FrameRounding = 4.0f; // Rounded corners
+    style.WindowRounding = 6.0f;
+    style.GrabRounding = 4.0f;
+    style.ScrollbarRounding = 6.0f;
 }
