@@ -29,10 +29,20 @@ void Renderer::Clear()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void Renderer::SetBackfaceCulling()
+void Renderer::SetBackfaceCulling(bool vl)
 {
-    glEnable(GL_CULL_FACE);
+    if (vl)
+    {
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+    }
+    else
+    {
+        glDisable(GL_CULL_FACE);
+        
+    }
+ 
 
     // Set the culling mode to backface culling (default)
-    glCullFace(GL_BACK);
+   
 }

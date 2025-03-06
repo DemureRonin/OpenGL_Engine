@@ -39,18 +39,14 @@ int main()
     ImGUIInitializer::InitImGUI(window, io);
 
     if (GLADInitializer::InitGLAD()) return -1;
-    Renderer::SetBackfaceCulling();
-    Renderer::EnableDepthTest(true);
 
+    Renderer::EnableDepthTest(true);
 
     DirectionalLight dirLight;
 
     ObjectManager::LoadObject("Assets/Objects/Object.object");
-     ObjectManager::LoadObject("Assets/Objects/Object1.object");
-    ObjectManager::LoadObject("Assets/Objects/Object2.object");
-
-    ObjectManager::InitMaterialMap();
-
+    // ObjectManager::LoadObject("Assets/Objects/Object1.object");
+    //ObjectManager::LoadObject("Assets/Objects/Object2.object");
 
     PostProcessing postProcessing = PostProcessing();
     while (!glfwWindowShouldClose(window))
@@ -61,11 +57,11 @@ int main()
 
 
         Renderer::SetPolygonMode();
+        Renderer::SetBackfaceCulling(true);
         InputProcessor::ProcessInput(window, camera);
 
-
         if (!Renderer::polygonMode)
-         //   postProcessing.FBO.Bind();
+            postProcessing.FBO.Bind();
         Renderer::EnableDepthTest(true);
         Renderer::Clear();
 
@@ -85,8 +81,10 @@ int main()
                 obj->Draw();
             }
         }
+
         if (!Renderer::polygonMode)
-          //  postProcessing.RenderPostProcessing();
+            postProcessing.RenderPostProcessing();
+
 
         ObjectUIWindow::Render();
         HierarchyUIWindow::Render(ObjectManager::object_hierarchy);

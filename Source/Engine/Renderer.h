@@ -16,5 +16,5 @@ public:
     static void EnableDepthTest(bool vl);
     static void SetPolygonMode();
     static void Clear();
-    static void SetBackfaceCulling();
+    static void SetBackfaceCulling(bool vl);
 };

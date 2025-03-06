@@ -19,6 +19,7 @@ PostProcessing::PostProcessing()
 void PostProcessing::RenderPostProcessing() const
 {
     FBO.Unbind();
+    Renderer::SetBackfaceCulling(false);
     Renderer::EnableDepthTest(false);
 
     glClear(GL_COLOR_BUFFER_BIT);
