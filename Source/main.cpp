@@ -1,5 +1,6 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
+#include <algorithm>
 #include <iostream>
 #include <glm/glm.hpp>
 
@@ -27,6 +28,7 @@
 
 #include "UI/ObjectUIWindow.h"
 #include "UI/RendererUIWindow.h"
+#include "UI/SceneWindow.h"
 #include "UI/Toolbar.h"
 #include "Utils/Colors.h"
 void SetModernDarkTheme();
@@ -46,13 +48,15 @@ int main()
     InputProcessor::InitCallbacks(window, camera);
 
     ImGuiIO io;
-    
+
     ImGUIInitializer::InitImGUI(window, io);
     io.Fonts->AddFontFromFileTTF("Assets/Fonts/0xProtoNerdFontMono-Regular.ttf", 15.0f);
 
     if (GLADInitializer::InitGLAD()) return -1;
 
     Renderer::EnableDepthTest(true);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     DirectionalLight dirLight;
 
@@ -65,20 +69,31 @@ int main()
 
     PostProcessing postProcessing = PostProcessing();
     SetModernDarkTheme();
+    ImGui::GetStyle().Colors[ImGuiCol_WindowBg].w = 0.3f;
+    ImGui::GetStyle().Colors[ImGuiCol_MenuBarBg].w = 0.3f;
+    SceneWindow::InitializeSceneWindow(width, height - 100);
 
+
+    int x, y;
+    glfwGetFramebufferSize(window, &x, &y);
+    y -= 21;
+    int posX = 0, posY = 0;
     while (!glfwWindowShouldClose(window))
     {
         Time::Tick();
 
         ImGUIInitializer::NewFrame();
 
+        SceneWindow::RenderSceneWindow(x, y, posX, posY);
 
-        /*int uiOffsetX = 300;  // Space reserved for UI on the left
-        int uiOffsetY = 300;    // No offset on Y (UI on side)
-        int viewportWidth = 1000 - uiOffsetX;
-        int viewportHeight = 1000 - uiOffsetY;
-        glViewport(uiOffsetX, uiOffsetY, viewportWidth, viewportHeight);*/
-
+        camera->aspectX = (x);
+        camera->aspectY = (y);
+        // std::cout << camera->aspectX << ", " << camera->aspectY << std::endl;
+        int newPosX = 0, newPosY = 0;
+        glfwGetFramebufferSize(window, &newPosX, &newPosY);
+        Renderer::SetViewport(posX, newPosY - y - posY -Toolbar::toolBarHeight , x, y);
+        std::cout << y - posY << ", "  << std::endl;
+        Toolbar::Render();
 
         Renderer::SetPolygonMode();
         Renderer::SetBackfaceCulling(true);
@@ -90,11 +105,6 @@ int main()
         Renderer::Clear();
 
 
-        glfwGetFramebufferSize(window, &width, &height);
-
-        camera->aspectX = (width);
-        camera->aspectY = (height);
-        glViewport(0, 0, width, height);
         for (const auto& pair : ObjectManager::materialObjectMap)
         {
             std::shared_ptr<Material> material = pair.first;
@@ -115,13 +125,14 @@ int main()
         //  if (!Renderer::polygonMode)
         //     postProcessing.RenderPostProcessing();
 
-        Toolbar::Render();
-       // ObjectUIWindow::Render();
+
+        //std::cout << x << ", " << y << std::endl;
+        // ObjectUIWindow::Render();
         //HierarchyUIWindow::Render(ObjectManager::object_hierarchy);
-      //  RendererUIWindow::Render();
-      //  DirectionalLightUIWindow::Render(dirLight);
-      //  if (ObjectUIWindow::activeUIObject && ObjectUIWindow::activeUIObject->material)
-       //     MaterialUIWindow::Render(*ObjectUIWindow::activeUIObject->material);
+        //  RendererUIWindow::Render();
+        //  DirectionalLightUIWindow::Render(dirLight);
+        //  if (ObjectUIWindow::activeUIObject && ObjectUIWindow::activeUIObject->material)
+        //     MaterialUIWindow::Render(*ObjectUIWindow::activeUIObject->material);
 
         // glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 

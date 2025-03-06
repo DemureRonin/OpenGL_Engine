@@ -6,39 +6,32 @@
 class Toolbar
 {
 public:
+    static float toolBarHeight;
+
     static void Render()
     {
+        ImGui::GetStyle().Colors[ImGuiCol_WindowBg].w = 0.0f; // Fully transparent windows
+        ImGui::GetStyle().Colors[ImGuiCol_MenuBarBg].w = 0.0f; // Transparent menu bar
+
+        ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0, 0, 0, 0)); // Fully transparent
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);  
         if (ImGui::BeginMainMenuBar())  // Creates the top bar
         {
-            if (ImGui::BeginMenu("File"))
-            {
-                if (ImGui::MenuItem("New")) { /* Handle new file action */ }
-                if (ImGui::MenuItem("Open")) { /* Handle open file action */ }
-                if (ImGui::MenuItem("Save")) { /* Handle save action */ }
-                if (ImGui::MenuItem("Exit")) { /* Handle exit action */ }
-                ImGui::EndMenu();
-            }
+            toolBarHeight = ImGui::GetWindowSize().y;
 
-            if (ImGui::BeginMenu("Edit"))
+            if (ImGui::BeginMenu("Window"))
             {
-                if (ImGui::MenuItem("Undo")) { /* Handle undo */ }
-                if (ImGui::MenuItem("Redo")) { /* Handle redo */ }
-                ImGui::Separator();
-                if (ImGui::MenuItem("Cut")) { /* Handle cut */ }
-                if (ImGui::MenuItem("Copy")) { /* Handle copy */ }
-                if (ImGui::MenuItem("Paste")) { /* Handle paste */ }
-                ImGui::EndMenu();
-            }
-
-            if (ImGui::BeginMenu("Tools"))
-            {
-                if (ImGui::MenuItem("Brush")) { /* Activate brush tool */ }
-                if (ImGui::MenuItem("Eraser")) { /* Activate eraser tool */ }
-                if (ImGui::MenuItem("Fill")) { /* Activate fill tool */ }
+                if (ImGui::MenuItem("Inspector"))
+                {
+                    
+                }
+                
                 ImGui::EndMenu();
             }
 
             ImGui::EndMainMenuBar();
         }
+        ImGui::PopStyleVar();
+        ImGui::PopStyleColor();
     }
 };

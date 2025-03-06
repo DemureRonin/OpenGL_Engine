@@ -864,6 +864,8 @@
     <ClCompile Include="Source\UI\MaterialUIWindow.cpp" />
     <ClCompile Include="Source\UI\ObjectUIWindow.cpp" />
     <ClCompile Include="Source\UI\RendererUIWindow.cpp" />
+    <ClCompile Include="Source\UI\SceneWindow.cpp" />
+    <ClCompile Include="Source\UI\Toolbar.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Libraries\Include\glad\glad.h" />
@@ -1210,6 +1212,7 @@
     <ClInclude Include="Source\UI\MaterialUIWindow.h" />
     <ClInclude Include="Source\UI\ObjectUIWindow.h" />
     <ClInclude Include="Source\UI\RendererUIWindow.h" />
+    <ClInclude Include="Source\UI\SceneWindow.h" />
     <ClInclude Include="Source\UI\Toolbar.h" />
     <ClInclude Include="Source\Utils\Colors.h" />
     <ClInclude Include="Source\Utils\json.h" />

@@ -46,3 +46,8 @@ void Renderer::SetBackfaceCulling(bool vl)
     // Set the culling mode to backface culling (default)
    
 }
+
+void Renderer::SetViewport(int x, int y, int width, int height)
+{
+    glViewport(x, y, width, height);
+}

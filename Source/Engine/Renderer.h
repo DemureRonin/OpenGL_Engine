@@ -17,4 +17,5 @@ public:
     static void SetPolygonMode();
     static void Clear();
     static void SetBackfaceCulling(bool vl);
+    static void SetViewport(int x, int y, int width, int height);
 };
