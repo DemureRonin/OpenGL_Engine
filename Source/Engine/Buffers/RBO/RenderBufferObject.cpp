@@ -2,11 +2,11 @@
 #include "../../Source/Engine/Renderer.h"
 #include "glad/glad.h"
 
-RenderBufferObject::RenderBufferObject()
+RenderBufferObject::RenderBufferObject(int width, int height)
 {
     glGenRenderbuffers(1, &m_RendererID);
     Bind();
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, SCR_WIDTH, SCR_HEIGHT);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
     // use a single renderbuffer object for both a depth AND stencil buffer.
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_RendererID);
 }

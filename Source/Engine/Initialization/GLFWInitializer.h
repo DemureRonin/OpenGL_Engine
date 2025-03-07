@@ -35,6 +35,7 @@ public:
         }
         glfwMakeContextCurrent(window);
         glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+        Renderer::SetWindow(window);
         return window;
     }
 };

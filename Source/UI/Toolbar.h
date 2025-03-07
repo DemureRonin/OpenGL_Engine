@@ -6,7 +6,7 @@
 class Toolbar
 {
 public:
-    static float toolBarHeight;
+    static const float toolBarHeight;
 
     static void Render()
     {
@@ -17,8 +17,6 @@ public:
         ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);  
         if (ImGui::BeginMainMenuBar())  // Creates the top bar
         {
-            toolBarHeight = ImGui::GetWindowSize().y;
-
             if (ImGui::BeginMenu("Window"))
             {
                 if (ImGui::MenuItem("Inspector"))

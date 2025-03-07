@@ -1,3 +1,3 @@
 ﻿#include "Toolbar.h"
 
-float Toolbar::toolBarHeight = 0;
+const float Toolbar::toolBarHeight = 21;

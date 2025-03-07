@@ -8,6 +8,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "Renderer.h"
 #include "glad/glad.h"
 
 // Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
@@ -49,13 +50,23 @@ public:
     int aspectX;
     int aspectY;
 
+    void SetAspect(int x, int y)
+    {
+        aspectX = x;
+        aspectY = y;
+    }
+
     // constructor with vectors
-    Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
+    Camera(GLFWwindow* window, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f),
+           glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
            float yaw = YAW, float pitch = PITCH, int aspectX = 1600,
            int aspectY = 900) : Front(glm::vec3(0.0f, 0.0f, -1.0f)),
                                 MovementSpeed(speed),
                                 MouseSensitivity(SENSITIVITY), Zoom(ZOOM), aspectX(aspectX), aspectY(aspectY)
     {
+        auto viewport = Renderer::GetViewport();
+
+        SetAspect(static_cast<int>(viewport.x), static_cast<int>(viewport.y));
         Position = position;
         WorldUp = up;
         Yaw = yaw;

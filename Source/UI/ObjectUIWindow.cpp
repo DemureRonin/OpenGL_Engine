@@ -1,5 +1,8 @@
 ﻿#include "ObjectUIWindow.h"
 
+#include "Toolbar.h"
+#include "../Engine/Renderer.h"
+ImVec2 ObjectUIWindow::size = ImVec2(300, 0);
 std::shared_ptr<Object> ObjectUIWindow::activeUIObject = nullptr;
 
 void ObjectUIWindow::SetObject(const std::shared_ptr<Object>& obj)
@@ -14,12 +17,7 @@ std::shared_ptr<Object> ObjectUIWindow::GetObject()
 
 void ObjectUIWindow::Render()
 {
-    if (!ObjectUIWindow::activeUIObject) return;
-    int offset = 300;
-    ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x - offset, 10), ImGuiCond_Always); // Top-right corner
-    ImGui::SetNextWindowSize(ImVec2(offset, 160), ImGuiCond_Always); // Fixed width
-    ImGui::Begin(activeUIObject != nullptr ? activeUIObject->name.c_str() : " ", nullptr,
-                 ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+    ImGui::Begin(activeUIObject != nullptr ? activeUIObject->name.c_str() : " ");
 
     ImGui::PushItemWidth(70);
     if (activeUIObject != nullptr)

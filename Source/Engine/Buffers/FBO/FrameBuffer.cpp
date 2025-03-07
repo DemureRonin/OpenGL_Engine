@@ -2,22 +2,26 @@
 
 #include <iostream>
 
-FrameBuffer::FrameBuffer()
+FrameBuffer::FrameBuffer(int width, int height)
 {
     glGenFramebuffers(1, &m_RendererID);
     Bind();
 
     glGenTextures(1, &m_ColorBufferID);
     glBindTexture(GL_TEXTURE_2D, m_ColorBufferID);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, SCR_WIDTH, SCR_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ColorBufferID, 0);
+    std::cout << width << ", " <<
+        height << std::endl;
 }
 
 FrameBuffer::~FrameBuffer()
 {
     glDeleteFramebuffers(1, &m_RendererID);
+    glDeleteTextures(1, &m_ColorBufferID);
 }
 
 void FrameBuffer::Bind() const

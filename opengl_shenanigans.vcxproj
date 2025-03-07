@@ -399,7 +399,7 @@
       <SDLCheck>true</SDLCheck>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
-    <ClCompile Include="Source\Engine\PostProcessing.cpp" />
+    <ClCompile Include="Source\Engine\RenderTexture.cpp" />
     <ClCompile Include="Source\Engine\ProgramObject.h">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -864,7 +864,6 @@
     <ClCompile Include="Source\UI\MaterialUIWindow.cpp" />
     <ClCompile Include="Source\UI\ObjectUIWindow.cpp" />
     <ClCompile Include="Source\UI\RendererUIWindow.cpp" />
-    <ClCompile Include="Source\UI\SceneWindow.cpp" />
     <ClCompile Include="Source\UI\Toolbar.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -1181,7 +1180,7 @@
     <ClInclude Include="Source\Engine\Mesh.h" />
     <ClInclude Include="Source\Engine\Model.h" />
     <ClInclude Include="Source\Engine\Object.h" />
-    <ClInclude Include="Source\Engine\PostProcessing.h" />
+    <ClInclude Include="Source\Engine\RenderTexture.h" />
     <ClInclude Include="Source\Engine\Renderer.h" />
     <ClInclude Include="Source\Engine\Shader.h" />
     <ClInclude Include="Source\Engine\stb_image.h" />
@@ -1212,7 +1211,6 @@
     <ClInclude Include="Source\UI\MaterialUIWindow.h" />
     <ClInclude Include="Source\UI\ObjectUIWindow.h" />
     <ClInclude Include="Source\UI\RendererUIWindow.h" />
-    <ClInclude Include="Source\UI\SceneWindow.h" />
     <ClInclude Include="Source\UI\Toolbar.h" />
     <ClInclude Include="Source\Utils\Colors.h" />
     <ClInclude Include="Source\Utils\json.h" />
@@ -1244,6 +1242,7 @@
     <Content Include=".vs\opengl_shenanigans\v17\ipch\AutoPCH\ea94e56f23d7f1ce\DEPENDENCIES.ipch" />
     <Content Include=".vs\opengl_shenanigans\v17\Solution.VC.db" />
     <Content Include="Assets\Fonts\0xProtoNerdFontMono-Regular.ttf" />
+    <Content Include="Assets\Fonts\JetBrainsMonoNL-Regular.ttf" />
     <Content Include="Assets\Materials\mat.json" />
     <Content Include="Assets\Materials\Material.json" />
     <Content Include="imgui.ini" />
