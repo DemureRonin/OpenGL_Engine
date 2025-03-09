@@ -11,26 +11,21 @@
 #include "glm/gtc/type_ptr.hpp"
 #include <sstream>
 
+#include "Asset.h"
 #include "DirectionalLight.h"
 
 #include "ProgramObject.h"
-
-#define SHADER_LIT "Source/Shaders/Lit.glsl"
-#define SHADER_UNLIT "Source/Shaders/Unlit.glsl"
 
 class Object;
 class Camera;
 class Material;
 
-class Shader : public ProgramObject
+class Shader : public ProgramObject, public Asset
 {
-private:
-    std::string m_filePath;
-
 public:
-    //  std::shared_ptr<ShaderParams> shaderParams;
-    Shader(const char* filePath = SHADER_LIT);
-    std::string GetFilePath() { return m_filePath; };
+    Shader(const char* filePath, Engine::GUID inGUID);
+    std::string GetFilePath() { return assetPath; }
+
     void Bind() const override;
     void Unbind() const override;
     void SetBool(const std::string& name, bool value) const;
@@ -45,13 +40,5 @@ public:
     void SetObjectUniforms(const Camera& camera, const Object& object) const;
     void SetDirectionalLightUniforms(const DirectionalLight& dirLight) const;
 
-private:
-    struct ShaderProgramSource
-    {
-        std::string vertex, fragment;
-    };
-
-    ShaderProgramSource ParseShader(const std::string& filePath);
-
-    void CheckCompileErrors(unsigned int shader, std::string type);
+    
 };

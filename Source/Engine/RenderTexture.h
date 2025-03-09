@@ -12,7 +12,8 @@ public:
     FrameBuffer FBO = FrameBuffer();
     RenderBufferObject RBO = RenderBufferObject();
     std::shared_ptr<Shader> postShader;
-    RenderTexture();
+    std::shared_ptr<Camera> camera;
+    RenderTexture(const std::shared_ptr<Camera>& camera);
 
     void RenderPostProcessing() const;
     void NewFrame(int width, int height);

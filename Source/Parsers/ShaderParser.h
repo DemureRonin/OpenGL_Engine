@@ -8,6 +8,71 @@
 class ShaderParser
 {
 public:
+    struct ShaderProgramSource
+    {
+        std::string vertex, fragment;
+    };
+
+    static void CheckCompileErrors(unsigned int shader, std::string type)
+    {
+        int success;
+        char infoLog[1024];
+        if (type != "PROGRAM")
+        {
+            glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+            if (!success)
+            {
+                glGetShaderInfoLog(shader, 1024, NULL, infoLog);
+                std::cout
+                    << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n"
+                    << infoLog
+                    << "\n -- --------------------------------------------------- -- "
+                    << std::endl;
+            }
+        }
+        else
+        {
+            glGetProgramiv(shader, GL_LINK_STATUS, &success);
+            if (!success)
+            {
+                glGetProgramInfoLog(shader, 1024, NULL, infoLog);
+                std::cout
+                    << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n"
+                    << infoLog
+                    << "\n -- --------------------------------------------------- -- "
+                    << std::endl;
+            }
+        }
+    }
+
+    static ShaderProgramSource ParseShader(const char* filePath)
+    {
+        enum class ShaderType { NONE = -1, VERTEX = 0, FRAGMENT = 1, GEOMETRY = 2 };
+        ShaderType type = ShaderType::NONE;
+        std::ifstream stream(filePath);
+        std::string line;
+        std::stringstream stringStream[2];
+        while (std::getline(stream, line))
+        {
+            if (line.find("#pragma") != std::string::npos)
+            {
+                if (line.find("vertex") != std::string::npos)
+                {
+                    type = ShaderType::VERTEX;
+                }
+                else if (line.find("fragment") != std::string::npos)
+                {
+                    type = ShaderType::FRAGMENT;
+                }
+            }
+            else
+            {
+                stringStream[(int)type] << line << '\n';
+            }
+        }
+        return {stringStream[0].str(), stringStream[1].str()};
+    }
+
     static ShaderParams ParseShaderMaterialFloats(const std::string& filePath)
     {
         std::ifstream stream(filePath);
@@ -24,7 +89,7 @@ public:
         if (stream.is_open())
         {
             bool insideMaterial = false;
-            params.shaderFile = filePath;
+            params.shaderIDString = filePath;
             while (std::getline(stream, line))
             {
                 // Check if we entered the Material struct
@@ -95,7 +160,7 @@ public:
     static void SaveShaderParamsToJson(const ShaderParams& params, const std::string& filePath)
     {
         nlohmann::json jsonData;
-        jsonData["shaderFile"] = params.shaderFile;
+        jsonData["shaderFile"] = params.shaderIDString;
         // Convert texture parameters
         jsonData["textureParams"] = nlohmann::json::array();
         for (std::map<std::string, std::shared_ptr<Texture>>::const_iterator it = params.textureParameters.begin(); it

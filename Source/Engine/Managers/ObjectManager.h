@@ -15,6 +15,7 @@ public:
     static std::map<std::shared_ptr<Material>, std::vector<std::shared_ptr<Object>>> materialObjectMap;
     static std::vector<std::shared_ptr<Object>> object_hierarchy;
     static void AddObject(const std::shared_ptr<Object>& object);
+    static void AddObjectToRender(const std::shared_ptr<Object>& object);
     static void LoadObject(const char* filename);
     static void LoadObjectFromFile();
     static void AddEmpty(std::string& name);

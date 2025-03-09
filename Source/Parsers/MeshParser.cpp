@@ -28,7 +28,7 @@ std::shared_ptr<Mesh> MeshParser::ParseMesh(const char* filePath)
     file.close();
 
     std::string fileName = j["model"].get<std::string>();
-    Model model(fileName.c_str(), filePath);
+    Model model(fileName.c_str(),Engine::GUID::Generate() );
 
     std::shared_ptr<Mesh> mesh = model.meshes[0];
     std::string message = std::string(filePath) + " Loaded successfully";

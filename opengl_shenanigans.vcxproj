@@ -246,83 +246,8 @@
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
     <ClCompile Include="Source\Engine\ConsoleDebug\ConsoleDebug.cpp" />
-    <ClCompile Include="Source\Engine\Managers\MaterialManager.cpp" />
+    <ClCompile Include="Source\Engine\Managers\AssetLoader.cpp" />
     <ClCompile Include="Source\Engine\Managers\ObjectManager.cpp" />
-    <ClCompile Include="Source\Engine\Managers\ShaderManager.cpp" />
-    <ClCompile Include="Source\Engine\Managers\TextureManager.cpp">
-      <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <Optimization>Disabled</Optimization>
-      <SupportJustMyCode>true</SupportJustMyCode>
-      <AssemblerOutput>NoListing</AssemblerOutput>
-      <AssemblerListingLocation>opengl_s.1b920e6d\x64\Debug\</AssemblerListingLocation>
-      <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
-      <BrowseInformation>false</BrowseInformation>
-      <BrowseInformationFile>opengl_s.1b920e6d\x64\Debug\</BrowseInformationFile>
-      <CompileAs>Default</CompileAs>
-      <ConformanceMode>true</ConformanceMode>
-      <DiagnosticsFormat>Column</DiagnosticsFormat>
-      <DisableLanguageExtensions>false</DisableLanguageExtensions>
-      <ErrorReporting>Prompt</ErrorReporting>
-      <ExpandAttributedSource>false</ExpandAttributedSource>
-      <ExceptionHandling>Sync</ExceptionHandling>
-      <EnableASAN>false</EnableASAN>
-      <EnableFuzzer>false</EnableFuzzer>
-      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
-      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
-      <FloatingPointModel>Precise</FloatingPointModel>
-      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
-      <GenerateModuleDependencies>false</GenerateModuleDependencies>
-      <GenerateSourceDependencies>false</GenerateSourceDependencies>
-      <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
-      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
-      <IntrinsicFunctions>false</IntrinsicFunctions>
-      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
-      <LanguageStandard>Default</LanguageStandard>
-      <LanguageStandard_C>Default</LanguageStandard_C>
-      <MinimalRebuild>false</MinimalRebuild>
-      <ModuleDependenciesFile>opengl_s.1b920e6d\x64\Debug\</ModuleDependenciesFile>
-      <ModuleOutputFile>opengl_s.1b920e6d\x64\Debug\</ModuleOutputFile>
-      <OmitDefaultLibName>false</OmitDefaultLibName>
-      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
-      <WholeProgramOptimization>false</WholeProgramOptimization>
-      <ObjectFileName>opengl_s.1b920e6d\x64\Debug\</ObjectFileName>
-      <CallingConvention>Cdecl</CallingConvention>
-      <ProgramDataBaseFileName>opengl_s.1b920e6d\x64\Debug\vc143.pdb</ProgramDataBaseFileName>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>opengl_s.1b920e6d\x64\Debug\opengl_shenanigans.pch</PrecompiledHeaderOutputFile>
-      <PreprocessToFile>false</PreprocessToFile>
-      <PreprocessKeepComments>false</PreprocessKeepComments>
-      <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
-      <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
-      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
-      <ShowIncludes>false</ShowIncludes>
-      <SourceDependenciesFile>opengl_s.1b920e6d\x64\Debug\</SourceDependenciesFile>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <BufferSecurityCheck>true</BufferSecurityCheck>
-      <SmallerTypeCheck>false</SmallerTypeCheck>
-      <SpectreMitigation>false</SpectreMitigation>
-      <StructMemberAlignment>Default</StructMemberAlignment>
-      <TrackerLogDirectory>opengl_s.1b920e6d\x64\Debug\opengl_s.1b920e6d.tlog\</TrackerLogDirectory>
-      <TranslateIncludes>false</TranslateIncludes>
-      <MinimalRebuildFromTracking>true</MinimalRebuildFromTracking>
-      <TreatWarningAsError>false</TreatWarningAsError>
-      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
-      <UseFullPaths>true</UseFullPaths>
-      <WarningLevel>Level3</WarningLevel>
-      <XMLDocumentationFileName>opengl_s.1b920e6d\x64\Debug\</XMLDocumentationFileName>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <IntelJCCErratum>false</IntelJCCErratum>
-      <BuildStlModules>false</BuildStlModules>
-      <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
-      <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
-      <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
-      <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_UNICODE;UNICODE;</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
-      <LinkCompiled>true</LinkCompiled>
-    </ClCompile>
     <ClCompile Include="Source\Engine\Mesh.cpp" />
     <ClCompile Include="Source\Engine\Model.cpp" />
     <ClCompile Include="Source\Engine\Object.cpp">
@@ -549,6 +474,7 @@
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
     <ClCompile Include="Source\Engine\Shader.cpp" />
+    <ClCompile Include="Source\Engine\Test.cpp" />
     <ClCompile Include="Source\Engine\Texture.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -862,8 +788,10 @@
     <ClCompile Include="Source\UI\DirectionalLightUIWindow.cpp" />
     <ClCompile Include="Source\UI\HierarchyUIWindow.cpp" />
     <ClCompile Include="Source\UI\MaterialUIWindow.cpp" />
-    <ClCompile Include="Source\UI\ObjectUIWindow.cpp" />
+    <ClCompile Include="Source\UI\InspectorUIWindow.cpp" />
+    <ClCompile Include="Source\UI\ProjectUIWindow.cpp" />
     <ClCompile Include="Source\UI\RendererUIWindow.cpp" />
+    <ClCompile Include="Source\UI\SceneUIWindow.cpp" />
     <ClCompile Include="Source\UI\Toolbar.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -1159,6 +1087,7 @@
     <ClInclude Include="Libraries\Include\glm\vec4.hpp" />
     <ClInclude Include="Libraries\Include\glm\vector_relational.hpp" />
     <ClInclude Include="Libraries\Include\KHR\khrplatform.h" />
+    <ClInclude Include="Source\Engine\Asset.h" />
     <ClInclude Include="Source\Engine\Buffers\EBO\IndexBuffer.h" />
     <ClInclude Include="Source\Engine\Buffers\FBO\FrameBuffer.h" />
     <ClInclude Include="Source\Engine\Buffers\RBO\RenderBufferObject.h" />
@@ -1169,13 +1098,12 @@
     <ClInclude Include="Source\Engine\ConsoleDebug\DebugUtils.h" />
     <ClInclude Include="Source\Engine\ConsoleDebug\ConsoleDebug.h" />
     <ClInclude Include="Source\Engine\DirectionalLight.h" />
+    <ClInclude Include="Source\Engine\GUID.h" />
     <ClInclude Include="Source\Engine\Initialization\GLADInitializer.h" />
     <ClInclude Include="Source\Engine\Initialization\GLFWInitializer.h" />
     <ClInclude Include="Source\Engine\Initialization\ImGUIInitializer.h" />
-    <ClInclude Include="Source\Engine\Managers\MaterialManager.h" />
+    <ClInclude Include="Source\Engine\Managers\AssetLoader.h" />
     <ClInclude Include="Source\Engine\Managers\ObjectManager.h" />
-    <ClInclude Include="Source\Engine\Managers\ShaderManager.h" />
-    <ClInclude Include="Source\Engine\Managers\TextureManager.h" />
     <ClInclude Include="Source\Engine\Material.h" />
     <ClInclude Include="Source\Engine\Mesh.h" />
     <ClInclude Include="Source\Engine\Model.h" />
@@ -1185,6 +1113,7 @@
     <ClInclude Include="Source\Engine\Shader.h" />
     <ClInclude Include="Source\Engine\stb_image.h" />
     <ClInclude Include="Source\Engine\stb_image_impl.h" />
+    <ClInclude Include="Source\Engine\Test.h" />
     <ClInclude Include="Source\Engine\Texture.h" />
     <ClInclude Include="Source\Engine\Time\Time.h" />
     <ClInclude Include="Source\Engine\Transform.h" />
@@ -1198,7 +1127,6 @@
     <ClInclude Include="Source\imgui\imstb_textedit.h" />
     <ClInclude Include="Source\imgui\imstb_truetype.h" />
     <ClInclude Include="Source\InputProcessor.h" />
-    <ClInclude Include="Source\LookupTable.h" />
     <ClInclude Include="Source\nativefiledialog\common.h" />
     <ClInclude Include="Source\nativefiledialog\nfd.h" />
     <ClInclude Include="Source\nativefiledialog\nfd_common.h" />
@@ -1209,8 +1137,10 @@
     <ClInclude Include="Source\UI\DirectionalLightUIWindow.h" />
     <ClInclude Include="Source\UI\HierarchyUIWindow.h" />
     <ClInclude Include="Source\UI\MaterialUIWindow.h" />
-    <ClInclude Include="Source\UI\ObjectUIWindow.h" />
+    <ClInclude Include="Source\UI\InspectorUIWindow.h" />
+    <ClInclude Include="Source\UI\ProjectUIWindow.h" />
     <ClInclude Include="Source\UI\RendererUIWindow.h" />
+    <ClInclude Include="Source\UI\SceneUIWindow.h" />
     <ClInclude Include="Source\UI\Toolbar.h" />
     <ClInclude Include="Source\Utils\Colors.h" />
     <ClInclude Include="Source\Utils\json.h" />
@@ -1243,8 +1173,8 @@
     <Content Include=".vs\opengl_shenanigans\v17\Solution.VC.db" />
     <Content Include="Assets\Fonts\0xProtoNerdFontMono-Regular.ttf" />
     <Content Include="Assets\Fonts\JetBrainsMonoNL-Regular.ttf" />
-    <Content Include="Assets\Materials\mat.json" />
-    <Content Include="Assets\Materials\Material.json" />
+    <Content Include="Assets\Materials\material.mat" />
+    <Content Include="Assets\Materials\material1.mat" />
     <Content Include="imgui.ini" />
     <Content Include="Libraries\Lib\glfw3.lib" />
     <Content Include="opengl_s.1b920e6d\x64\Debug\glad.obj" />
@@ -1274,10 +1204,12 @@
     <Content Include="opengl_shenanigans.sln" />
     <Content Include="opengl_shenanigans.vcxproj.filters" />
     <Content Include="opengl_shenanigans.vcxproj.user" />
+    <Content Include="Resources\1x1_white.jpeg" />
+    <Content Include="Resources\200px-Debugempty.png" />
+    <Content Include="Resources\material_error.mat" />
+    <Content Include="Resources\quad.obj" />
     <Content Include="Source\Engine\ShaderParams.h" />
     <Content Include="Source\nativefiledialog\nfd_cocoa.m" />
-    <Content Include="Source\Shaders\Lit.glsl" />
-    <Content Include="Source\Shaders\PostProcessing.glsl" />
     <Content Include="x64\Debug\opengl_shenanigans.exe" />
     <Content Include="x64\Debug\opengl_shenanigans.pdb" />
   </ItemGroup>
@@ -1423,7 +1355,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include=".vs\opengl_shenanigans\v17\ipch\AutoPCH\930ac8a54deecee1\" />
-    <Folder Include="Assets\Meshes\" />
     <Folder Include="Assets\Objects\" />
     <Folder Include="Source\Engine\Input\" />
   </ItemGroup>

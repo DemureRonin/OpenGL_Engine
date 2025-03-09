@@ -1,17 +1,18 @@
 ﻿#include "MaterialParser.h"
 
-#include "../Engine/Managers/ShaderManager.h"
+#include "../Engine/Managers/AssetLoader.h"
 
-unsigned int MaterialParser::m_IDCount = 0;
+
+
 std::vector<std::shared_ptr<Material>> MaterialParser::materials{};
 const char* MaterialParser::m_DebugName = "MATERIAL_PARSER";
 
-std::shared_ptr<Material> MaterialParser::LoadMaterial(const char* filePath)
+std::shared_ptr<Material> MaterialParser::ParseMaterial(const char* assetPath, Engine::GUID inGUID)
 {
-    std::ifstream file(filePath);
+    std::ifstream file(assetPath);
     if (!file.is_open())
     {
-        std::cerr << "Failed to open material file: " << filePath << std::endl;
+        std::cerr << "Failed to open material file: " << assetPath << std::endl;
         return nullptr;
     }
 
@@ -27,7 +28,7 @@ std::shared_ptr<Material> MaterialParser::LoadMaterial(const char* filePath)
     }
     std::shared_ptr<ShaderParams> params = std::make_shared<ShaderParams>();
     // Parse shader file
-    params->shaderFile = data.value("shaderFile", "");
+    params->shaderIDString = data.value("shaderGUID", "");
 
     // Parse float parameters
     if (data.contains("floatParams") && data["floatParams"].is_array())
@@ -109,7 +110,7 @@ std::shared_ptr<Material> MaterialParser::LoadMaterial(const char* filePath)
     {
         if (data["textureParams"].empty())
         {
-            params->textureParameters["default"] = TextureManager::LoadTexture(WHITE_TEXTURE);
+          //  params->textureParameters["default"] = TextureManager::LoadTexture(WHITE_TEXTURE);
             std::cout << "No textures found in the material file." << std::endl;
         }
         else
@@ -121,17 +122,18 @@ std::shared_ptr<Material> MaterialParser::LoadMaterial(const char* filePath)
                     for (auto it = textureEntry.begin(); it != textureEntry.end(); ++it)
                     {
                         std::string type = it.key(); // Texture type (e.g., "albedo", "normal")
-                        std::string path = it.value().get<std::string>(); // Texture file path
+                        Engine::GUID textureID = Engine::GUID::FromString(it.value().get<std::string>());
 
-                        // Load the texture and store it with its type as the key
-                        params->textureParameters[type] = TextureManager::LoadTexture(path);
+                        params->textureParameters[type] = static_pointer_cast<
+                            Texture>(AssetLoader::GetAsset(textureID));
                     }
                 }
             }
         }
     }
-    auto shader = ShaderManager::GetShader(params->shaderFile.c_str());
-    auto mat = std::make_shared<Material>(m_IDCount++, shader, params);
+    auto shader = static_pointer_cast<Shader>(
+        AssetLoader::GetAsset(Engine::GUID::FromString(params->shaderIDString.c_str())));
+    auto mat = std::make_shared<Material>(assetPath, inGUID, shader, params);
 
     return mat;
 }

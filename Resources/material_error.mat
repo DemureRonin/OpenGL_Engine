@@ -1,0 +1,23 @@
+{
+  "floatParams": [],
+  "intParams": [],
+  "shaderGUID": "00000000-0000-0000-0000-000000000001",
+  "textureParams": [
+    {
+      "albedo": "00000000-0000-0000-0000-000000000003"
+    }
+  ],
+  "vec2Params": [],
+  "vec3Params": [],
+  "vec4Params": [
+    {
+      "name": "tint",
+      "value": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    }
+  ]
+}

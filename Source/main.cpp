@@ -1,10 +1,11 @@
 #define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
+
 #include <algorithm>
-#include <iostream>
+
 #include <glm/glm.hpp>
 
 #include "InputProcessor.h"
+#include "Engine/GUID.h"
 
 #include "Engine/RenderTexture.h"
 #include "Engine/Buffers/FBO/FrameBuffer.h"
@@ -13,29 +14,40 @@
 #include "Engine/Initialization/GLADInitializer.h"
 #include "Engine/Initialization/GLFWInitializer.h"
 #include "Engine/Initialization/ImGUIInitializer.h"
+#include "Engine/Managers/AssetLoader.h"
 #include "Engine/Managers/ObjectManager.h"
-#include "Engine/Managers/ShaderManager.h"
 
 #include "Engine/Time/Time.h"
 #include "nativefiledialog/nfd.h"
-#include "Utils/Primitives/CubePositions.h"
 #include "Parsers/MaterialParser.h"
 #include "Parsers/MeshParser.h"
+#include "Utils/Primitives/CubePositions.h"
 
 #include "Parsers/ObjectParser.h"
 #include "UI/DirectionalLightUIWindow.h"
 #include "UI/HierarchyUIWindow.h"
 #include "UI/MaterialUIWindow.h"
 
-#include "UI/ObjectUIWindow.h"
+
+#include <iostream>
+
+#include "Engine/Test.h"
+#include "imgui/imgui.h"
+#include "UI/InspectorUIWindow.h"
+#include "UI/ProjectUIWindow.h"
 #include "UI/RendererUIWindow.h"
+#include "UI/SceneUIWindow.h"
 #include "UI/Toolbar.h"
 #include "Utils/Colors.h"
-#include "imgui/imgui.h"
-
 
 int main()
 {
+    Test::PrintFilePath();
+    while (true)
+    {
+        
+    }
+    return EXIT_SUCCESS;
     auto window = GLFWInitializer::InitGLFW();
     if (!window) return -1;
 
@@ -45,38 +57,35 @@ int main()
 
     ImGuiIO io;
     ImGUIInitializer::InitImGUI(window, io);
-
-
     if (GLADInitializer::InitGLAD()) return -1;
+    AssetLoader::LoadAssets();
 
     Renderer::EnableDepthTest(true);
 
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+    //glEnable(GL_BLEND);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    for (auto it : AssetLoader::objects)
+    {
+        ObjectManager::AddObject(it.second);
+    }
     DirectionalLight dirLight;
 
-    ShaderManager::LoadShaders("Source/Shaders");
+    SceneUIWindow scene(camera, Renderer::GetViewport().x, Renderer::GetViewport().y);
 
-
-    ObjectManager::LoadObject("Assets/Objects/Object.object");
-
-
-    RenderTexture renderTexture = RenderTexture();
-    int width = 1600, height = 900;
     while (!glfwWindowShouldClose(window))
     {
         Time::Tick();
         Renderer::NewFrame();
         ImGUIInitializer::NewFrame();
-         
-        ImGui::DockSpaceOverViewport();
+
 
         Toolbar::Render();
-        renderTexture.NewFrame(width, height);
-        ObjectUIWindow::Render();
-        camera->SetAspect(width, height);
-        renderTexture.Bind();
+        InspectorUIWindow::Render();
+        HierarchyUIWindow::Render(ObjectManager::object_hierarchy);
+        ProjectUIWindow::RenderAssetBrowser("Assets");
+        MaterialUIWindow::Render();
+        scene.NewFrame();
+
 
         Renderer::SetPolygonMode();
         Renderer::SetBackfaceCulling(true);
@@ -98,20 +107,13 @@ int main()
 
             for (const auto& obj : objs)
             {
-                if (obj->mesh == nullptr) continue;
+                if (obj->model == nullptr) continue;
                 material->shader->SetObjectUniforms(*camera, *obj);
                 obj->Draw();
             }
         }
+        scene.Render();
 
-        renderTexture.BindTexture();
-        ImGui::Begin("Scene");
-
-        ImGui::Image(renderTexture.FBO.GetColorBuffer(), ImGui::GetContentRegionAvail(), ImVec2(0, 1), ImVec2(1, 0));
-        width = ImGui::GetWindowWidth();
-        height = ImGui::GetWindowHeight();
-        std::cout << width << " m" << height << std::endl;
-        ImGui::End();
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         glfwSwapBuffers(window);

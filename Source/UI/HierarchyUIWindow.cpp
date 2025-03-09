@@ -23,11 +23,24 @@ void HierarchyUIWindow::Render(const std::vector<std::shared_ptr<Object>>& objec
         std::string buttonLabel = obj->name + "##" + std::to_string(counter);
         if (ImGui::Button(buttonLabel.c_str(), ImVec2(-1, 0)))
         {
-            ObjectUIWindow::SetObject(obj);
+            InspectorUIWindow::SetObject(obj);
         }
         counter++;
     }
 
     ImGui::End();
+    if (showAddObjectWindow)
+    {
+        ImGui::Begin("Add Object", &showAddObjectWindow, ImGuiWindowFlags_AlwaysAutoResize);
+
+        if (ImGui::Button("Add Empty"))
+        {
+            std::string str = "Empty";
+           ObjectManager::AddEmpty(str);
+            showAddObjectWindow = false; // Close the window after adding
+        }
+
+        ImGui::End();
+    }
 
 }

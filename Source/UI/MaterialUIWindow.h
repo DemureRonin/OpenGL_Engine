@@ -7,5 +7,5 @@
 class MaterialUIWindow
 {
 public:
-    static void Render(const Material& material);
+    static void Render();
 };

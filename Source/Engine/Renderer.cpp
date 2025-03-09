@@ -73,6 +73,14 @@ glm::vec2 Renderer::GetViewport()
     return m_Viewport;
 }
 
+void Renderer::SetWindow(GLFWwindow* window)
+{
+    {
+        currentWindow = window;
+        NewFrame();
+    }
+}
+
 void Renderer::ClearColorBit()
 {
     glClear(GL_COLOR_BUFFER_BIT);

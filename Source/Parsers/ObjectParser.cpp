@@ -4,27 +4,28 @@
 #include "MeshParser.h"
 #include "../Engine/ConsoleDebug/ConsoleDebug.h"
 #include "../Engine/ConsoleDebug/DebugUtils.h"
-#include "../Engine/Managers/MaterialManager.h"
+#include "../Engine/Managers/AssetLoader.h"
+
 const char* ObjectParser::m_DebugName = "OBJECT_PARSER";
 
 std::shared_ptr<Object> ObjectParser::CreateErrorObject()
 {
-    std::string name = "ERROR";
+    /*std::string name = "ERROR";
     std::shared_ptr<Object> errorObject = std::make_shared<Object>(name, glm::vec3(0), glm::vec3(0), glm::vec3(1),
                                                                    false);
-    return errorObject;
+    return errorObject;*/
+    return nullptr;
 }
 
 
-int ObjectParser::LoadObject(const char* filePath,
-                             std::shared_ptr<Object>& object)
+std::shared_ptr<Object> ObjectParser::ParseObject(const char* filePath, Engine::GUID inGUID)
 {
     std::ifstream file(filePath);
     if (!file.is_open())
     {
         ConsoleDebug::PrintFileError(m_DebugName, filePath, "Falling back to default object");
-        object = ObjectParser::CreateErrorObject();
-        return 1;
+        //  object = ObjectParser::CreateErrorObject();
+        return nullptr;
     }
 
     json j;
@@ -36,8 +37,8 @@ int ObjectParser::LoadObject(const char* filePath,
     {
         ConsoleDebug::PrintFileError(m_DebugName, filePath, e.what());
         file.close();
-        object = ObjectParser::CreateErrorObject();
-        return 1;
+
+        return nullptr;
     }
     file.close();
 
@@ -49,28 +50,30 @@ int ObjectParser::LoadObject(const char* filePath,
                                    j["rotation"][2].get<float>());
     glm::vec3 scale = glm::vec3(j["scale"][0].get<float>(), j["scale"][1].get<float>(), j["scale"][2].get<float>());
 
-    std::string mesh = j["mesh"].get<std::string>();
-    std::string material = j["material"].get<std::string>();
+    auto modelID = Engine::GUID::FromString(j["modelGUID"].get<std::string>());
+    auto materialID = Engine::GUID::FromString(j["materialGUID"].get<std::string>());
 
-    std::shared_ptr<Object> createdObject = std::make_shared<Object>(name, position, rotation, scale, true, filePath);
-    std::shared_ptr<Mesh> objectMesh = MeshParser::ParseMesh(mesh.c_str());
-    std::shared_ptr<Material> objectMat = MaterialManager::LoadMaterial(material.c_str());
+    std::shared_ptr<Object> createdObject = std::make_shared<Object>(inGUID, name, position, rotation, scale, true,
+                                                                     filePath);
+    auto objectModel = std::static_pointer_cast<Model>(AssetLoader::GetAsset(modelID));
 
-    if (objectMesh != nullptr)
-        createdObject->SetMesh(objectMesh);
+
+    auto objectMat = std::static_pointer_cast<Material>(AssetLoader::GetAsset(materialID));
+
+    if (objectModel != nullptr)
+        createdObject->SetModel(objectModel);
     if (objectMat != nullptr)
         createdObject->SetMaterial(objectMat);
 
     std::string message = std::string(filePath) + " Loaded Successfully";
     ConsoleDebug::PrintMessage(m_DebugName, message.c_str());
 
-    object = createdObject;
-    return 0;
+    return createdObject;
 }
 
 int ObjectParser::SaveObject(const char* filePath, const std::shared_ptr<Object>& object)
 {
-    if (!object->loadedSuccessfully)
+    /*if (!object->loadedSuccessfully)
     {
         ConsoleDebug::PrintError(m_DebugName, "Could not save object");
         return 1;
@@ -83,7 +86,7 @@ int ObjectParser::SaveObject(const char* filePath, const std::shared_ptr<Object>
 
     };
     if (object->mesh != nullptr)
-        jsonObject.push_back({"mesh", object->mesh->GetFilePath()});
+        jsonObject.push_back({"mesh", " "});
     else jsonObject.push_back({"mesh", ""});
     
     if (object->material != nullptr)
@@ -103,7 +106,7 @@ int ObjectParser::SaveObject(const char* filePath, const std::shared_ptr<Object>
     {
         ConsoleDebug::PrintFileError(m_DebugName, filePath, "Could not save object");
         return 1;
-    }
+    }*/
 
     return 0;
 }

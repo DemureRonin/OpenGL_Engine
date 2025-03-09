@@ -27,7 +27,10 @@ public:
     static void NewFrame();
     static void SetViewport(int x, int y, int width, int height);
     static glm::vec2 GetViewport();
-    static void SetWindow(GLFWwindow* window) { currentWindow = window; }
+
+    static void SetWindow(GLFWwindow* window);
+   
+
     static GLFWwindow* GetWindow() { return currentWindow; }
     static void ClearColorBit();
     static bool ChangedViewportSize() { return m_ViewportSizeChanged; }

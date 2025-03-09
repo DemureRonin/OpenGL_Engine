@@ -1,42 +1,43 @@
 ﻿#pragma once
-#include "Mesh.h"
+
 #include "Transform.h"
 
+#include "Model.h"
+#include "Material.h"
 
-class Object
+
+class Object : public std::enable_shared_from_this<Object>, public Asset
 {
 private:
-    std::string m_FilePath;
+
+
 public:
-    Object(std::string& name, glm::vec3 position = glm::vec3(0), glm::vec3 rotation = glm::vec3(0),
-           glm::vec3 scale = glm::vec3(1), bool loadedSuccessfully = true, std::string filePath = "")
-        : m_FilePath(filePath), name(name), transform(position, rotation, scale), loadedSuccessfully(loadedSuccessfully)
+    Object(Engine::GUID inGUID, std::string& name, glm::vec3 position = glm::vec3(0), glm::vec3 rotation = glm::vec3(0),
+           glm::vec3 scale = glm::vec3(1), bool loadedSuccessfully = true, const std::string& filePath = "")
+        : Asset(filePath, AssetType::Object, inGUID), name(name), transform(position, rotation, scale),
+          loadedSuccessfully(loadedSuccessfully)
     {
         transform.ApplyTranslation();
+    }
+
+    
+
+    std::shared_ptr<Object> GetSharedPtr()
+    {
+        return shared_from_this();
     }
 
     std::string name = "Object";
-   
+
     Transform transform;
-    std::shared_ptr<Mesh> mesh;
-    std::shared_ptr<Material> material;
+    std::shared_ptr<Model> model = nullptr;
+    std::shared_ptr<Material> material = nullptr;
     bool loadedSuccessfully;
-    std::string GetFilePath() { return m_FilePath; }
-    void Draw()
-    {
-        transform.ApplyTranslation();
-        mesh->Draw();
-    }
+    std::string GetFilePath() { return assetPath; }
 
-    void SetMesh(const std::shared_ptr<Mesh> newMesh)
-    {
-       
-        this->mesh = newMesh;
-    }
+    void Draw();
 
-    void SetMaterial(const std::shared_ptr<Material> newMaterial)
-    {
-        
-        this->material = newMaterial;
-    }
+    void SetModel(const std::shared_ptr<Model>& newMesh);
+
+    void SetMaterial(const std::shared_ptr<Material>& newMaterial);
 };

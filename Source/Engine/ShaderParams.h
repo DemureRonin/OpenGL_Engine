@@ -5,7 +5,7 @@
 #include <glm/glm.hpp>
 struct ShaderParams
 {
-    std::string shaderFile;
+    std::string shaderIDString;
     std::map<std::string, int> intParameters;
     std::map<std::string, float> floatParameters;
     std::map<std::string, glm::vec2> vec2Parameters;

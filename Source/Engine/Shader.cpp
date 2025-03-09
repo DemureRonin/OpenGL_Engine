@@ -4,12 +4,12 @@
 #include "Material.h"
 #include "Object.h"
 #include "ShaderParams.h"
+#include "../Parsers/ShaderParser.h"
 
 
-Shader::Shader(const char* filePath)
+Shader::Shader(const char* filePath, Engine::GUID inGUID): Asset(filePath, AssetType::Shader, inGUID)
 {
-    m_filePath = filePath;
-    const auto shaderSource = ParseShader(filePath);
+    const auto shaderSource = ShaderParser::ParseShader(filePath);
 
     const char* vShaderCode = shaderSource.vertex.c_str();
     const char* fShaderCode = shaderSource.fragment.c_str();
@@ -17,18 +17,18 @@ Shader::Shader(const char* filePath)
     unsigned int vertex = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertex, 1, &vShaderCode, NULL);
     glCompileShader(vertex);
-    CheckCompileErrors(vertex, "VERTEX");
+    ShaderParser::CheckCompileErrors(vertex, "VERTEX");
 
     unsigned int fragment = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragment, 1, &fShaderCode, NULL);
     glCompileShader(fragment);
-    CheckCompileErrors(fragment, "FRAGMENT");
+    ShaderParser::CheckCompileErrors(fragment, "FRAGMENT");
 
     m_RendererID = glCreateProgram();
     glAttachShader(m_RendererID, vertex);
     glAttachShader(m_RendererID, fragment);
     glLinkProgram(m_RendererID);
-    CheckCompileErrors(m_RendererID, "PROGRAM");
+    ShaderParser::CheckCompileErrors(m_RendererID, "PROGRAM");
 
     glDeleteShader(vertex);
     glDeleteShader(fragment);
@@ -160,63 +160,3 @@ void Shader::SetDirectionalLightUniforms(const DirectionalLight& dirLight) const
     SetVec3("directionalLight.specular", dirLight.specular);
 }
 
-Shader::ShaderProgramSource Shader::ParseShader(const std::string& filePath)
-{
-    enum class ShaderType { NONE = -1, VERTEX = 0, FRAGMENT = 1, GEOMETRY = 2 };
-    ShaderType type = ShaderType::NONE;
-    std::ifstream stream(filePath);
-    std::string line;
-    std::stringstream stringStream[2];
-    while (std::getline(stream, line))
-    {
-        if (line.find("#pragma") != std::string::npos)
-        {
-            if (line.find("vertex") != std::string::npos)
-            {
-                type = ShaderType::VERTEX;
-            }
-            else if (line.find("fragment") != std::string::npos)
-            {
-                type = ShaderType::FRAGMENT;
-            }
-        }
-        else
-        {
-            stringStream[(int)type] << line << '\n';
-        }
-    }
-    return {stringStream[0].str(), stringStream[1].str()};
-}
-
-
-void Shader::CheckCompileErrors(unsigned int shader, std::string type)
-{
-    int success;
-    char infoLog[1024];
-    if (type != "PROGRAM")
-    {
-        glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-        if (!success)
-        {
-            glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-            std::cout
-                << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n"
-                << infoLog
-                << "\n -- --------------------------------------------------- -- "
-                << std::endl;
-        }
-    }
-    else
-    {
-        glGetProgramiv(shader, GL_LINK_STATUS, &success);
-        if (!success)
-        {
-            glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-            std::cout
-                << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n"
-                << infoLog
-                << "\n -- --------------------------------------------------- -- "
-                << std::endl;
-        }
-    }
-}

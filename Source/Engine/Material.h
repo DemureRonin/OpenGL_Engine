@@ -6,19 +6,16 @@
 #include "Shader.h"
 #include "ShaderParams.h"
 
-class Material
+class Material : public Asset
 {
-private:
-    unsigned int m_ID;
-    std::string m_FilePath;
-
 public:
     std::shared_ptr<Shader> shader = nullptr;
-    std::shared_ptr<ShaderParams> shaderParams;
+    std::shared_ptr<ShaderParams> shaderParams = nullptr;
 
+   
 
-    Material(unsigned int ID, std::shared_ptr<Shader> sh,
-             std::shared_ptr<ShaderParams>& params): m_ID(ID)
+    Material(const std::string& path, Engine::GUID inGUID, const std::shared_ptr<Shader>& sh,
+             const std::shared_ptr<ShaderParams>& params): Asset(path, AssetType::Material, inGUID)
     {
         shaderParams = params;
         shader = sh;
@@ -26,10 +23,9 @@ public:
 
     bool operator<(const Material& other) const
     {
-        return m_ID < other.GetID();
+        return guid.ToString() < other.guid.ToString();
     }
 
-    unsigned int GetID() const { return m_ID; }
-    std::string GetFilePath() const { return m_FilePath; }
+    std::string GetFilePath() const { return assetPath; }
     bool IsLoaded();
 };

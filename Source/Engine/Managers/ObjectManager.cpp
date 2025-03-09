@@ -8,14 +8,19 @@ void ObjectManager::AddObject(const std::shared_ptr<Object>& object)
     if (object != nullptr)
         object_hierarchy.push_back(object);
     if (object->material)
-        ObjectManager::materialObjectMap[object->material].push_back(object);
+        AddObjectToRender(object);
+}
+void ObjectManager::AddObjectToRender(const std::shared_ptr<Object>& object)
+{
+    ObjectManager::materialObjectMap[object->material].push_back(object);
+    std::cout << materialObjectMap.size() << std::endl;
 }
 
 void ObjectManager::LoadObject(const char* filename)
 {
-    std::shared_ptr<Object> object;
-    ObjectParser::LoadObject(filename, object);
-    AddObject(object);
+    /*std::shared_ptr<Object> object;
+    ObjectParser::ParseObject(filename, TODO);
+    AddObject(object);*/
 }
 
 void ObjectManager::LoadObjectFromFile()
@@ -51,13 +56,14 @@ void ObjectManager::LoadObjectFromFile()
 
 void ObjectManager::AddEmpty(std::string& name)
 {
-    std::shared_ptr<Object> object = std::make_shared<Object>(name, glm::vec3(0), glm::vec3(0), glm::vec3(1),
+    std::shared_ptr<Object> object = std::make_shared<Object>(Engine::GUID::Generate(),  name, glm::vec3(0), glm::vec3(0), glm::vec3(1),
                                                               true);
     object_hierarchy.push_back(object);
 }
 
 void ObjectManager::InitMaterialMap()
 {
+    materialObjectMap.clear();
     for (const auto& obj : ObjectManager::object_hierarchy)
     {
         if (obj->material != nullptr)

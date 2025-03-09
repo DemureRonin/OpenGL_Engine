@@ -25,7 +25,6 @@ class Mesh
 {
 private:
     VertexBufferLayout m_Layout;
-    std::string m_FilePath;
     void SetupMesh();
 
 public:
@@ -36,7 +35,7 @@ public:
     VertexBuffer VBO;
     IndexBuffer EBO;
 
-    Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const std::string& filePath);
+    Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices);
     void Draw() const;
-    std::string GetFilePath() { return m_FilePath; }
+   
 };

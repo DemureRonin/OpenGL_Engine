@@ -1,19 +1,26 @@
 ﻿#include "RenderTexture.h"
 
 #include "Camera.h"
-#include "Managers/ShaderManager.h"
+#include "Managers/AssetLoader.h"
 
 
-RenderTexture::RenderTexture()
+
+RenderTexture::RenderTexture(const std::shared_ptr<Camera>& camera)
 {
-    postShader = ShaderManager::GetShader("Source/Shaders/PostProcessing.glsl");
+    this->camera = camera;
+    /*auto it = AssetLoader::shaders.begin();
+    std::advance(it, 1);
+    postShader = it->second;
+    std::cout << it->second->assetPath << std::endl;
     postShader->Bind();
     postShader->SetInt("screenTexture", 0);
 
     std::string name = "d";
     object = std::make_shared<Object>(name);
-    auto mesh = MeshParser::ParseMesh("Assets/Meshes/Mesh3.mesh");
-    object->SetMesh(mesh);
+    auto mesh = AssetLoader::models.begin()->second;
+    std::cout << mesh->assetPath << std::endl;
+   // object->model = mesh;*/
+
 
     FBO.CheckFBOStatus();
     FBO.Unbind();
@@ -35,12 +42,14 @@ void RenderTexture::RenderPostProcessing() const
 
 void RenderTexture::NewFrame(int width, int height)
 {
-  auto size = Renderer::GetViewport();
+    auto size = Renderer::GetViewport();
     if (Renderer::ChangedViewportSize())
     {
         FBO = FrameBuffer(size.x, size.y);
         RBO = RenderBufferObject(size.x, size.y);
     }
+    camera->SetAspect(width, height);
+    Bind();
 }
 
 void RenderTexture::BindTexture() const

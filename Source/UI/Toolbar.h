@@ -10,11 +10,7 @@ public:
 
     static void Render()
     {
-        ImGui::GetStyle().Colors[ImGuiCol_WindowBg].w = 0.0f; // Fully transparent windows
-        ImGui::GetStyle().Colors[ImGuiCol_MenuBarBg].w = 0.0f; // Transparent menu bar
-
-        ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0, 0, 0, 0)); // Fully transparent
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);  
+      
         if (ImGui::BeginMainMenuBar())  // Creates the top bar
         {
             if (ImGui::BeginMenu("Window"))
@@ -29,7 +25,6 @@ public:
 
             ImGui::EndMainMenuBar();
         }
-        ImGui::PopStyleVar();
-        ImGui::PopStyleColor();
+        
     }
 };

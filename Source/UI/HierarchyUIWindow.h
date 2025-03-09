@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 
-#include "ObjectUIWindow.h"
+#include "InspectorUIWindow.h"
 #include "../Engine/Object.h"
 
 #include "../imgui/imgui.h"

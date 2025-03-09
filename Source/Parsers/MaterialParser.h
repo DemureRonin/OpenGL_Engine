@@ -9,17 +9,15 @@
 #include "../Engine/Material.h"
 #include "../Parsers/ShaderParser.h"
 
-#include "../Engine/Managers/TextureManager.h"
+
 using json = nlohmann::json;
+
 class MaterialParser
 {
 private:
-    static unsigned int m_IDCount;
     static const char* m_DebugName;
 
 public:
     static std::vector<std::shared_ptr<Material>> materials;
-    static std::shared_ptr<Material> LoadMaterial(const char* filePath);
+    static std::shared_ptr<Material> ParseMaterial(const char* assetPath, Engine::GUID inGUID);
 };
-
-

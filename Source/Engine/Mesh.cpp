@@ -2,10 +2,11 @@
 
 #include "Material.h"
 
-Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const std::string& filePath)
-    : m_FilePath(filePath), vertices(vertices),
+Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices)
+    : vertices(vertices),
       indices(indices),
-      VBO(this->vertices.data(), this->vertices.size() * (sizeof(Vertex))), EBO(this->indices.data(), this->indices.size())
+      VBO(this->vertices.data(), this->vertices.size() * (sizeof(Vertex))),
+      EBO(this->indices.data(), this->indices.size())
 {
     SetupMesh();
 }
