@@ -1,41 +1,37 @@
 {
-  "GUID": "449435e2-aae9-df21-b804-25540d4acd28",
-  "shaderGUID": "0f95d15d-6566-aab6-7eca-7c2e77c9e243",
-  "floatParams": [
-    {
-      "name": "metallicProperty",
-      "value": 0.3
-    },
-    {
-      "name": "normalScale",
-      "value": 0
-    },
-    {
-      "name": "shininess",
-      "value": 1.0
-    }
-  ],
-  "intParams": [],
-  
-  "textureParams": [
-    {
-      "albedo": "1b5717ec-6ea7-83bf-61b3-235f79709a29"
-    },
-    {
-      "normal": "549fb458-51eb-eb31-dde1-662c438b2f07"
-    }
-  ],
-  "vec2Params": [],
-  "vec3Params": [],
-  "vec4Params": [
-    {
-      "name": "tint",
-      "value": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ]
-    }
-  ]
+    "GUID": "449435e2-aae9-df21-b804-25540d4acd28",
+    "floatParams": [
+        {
+            "name": "metallicProperty",
+            "value": 0.003000000026077032
+        },
+        {
+            "name": "normalScale",
+            "value": 0.0
+        },
+        {
+            "name": "shininess",
+            "value": 1.0
+        }
+    ],
+    "shaderGUID": "00000000-0000-0000-0000-000000000002",
+    "textureParams": [
+        {
+            "albedo": "1b5717ec-6ea7-83bf-61b3-235f79709a29"
+        },
+        {
+            "normal": "549fb458-51eb-eb31-dde1-662c438b2f07"
+        }
+    ],
+    "vec4Params": [
+        {
+            "name": "tint",
+            "value": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ]
+        }
+    ]
 }

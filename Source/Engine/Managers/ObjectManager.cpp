@@ -1,26 +1,79 @@
 ﻿#include "ObjectManager.h"
-std::map<std::shared_ptr<Material>, std::vector<std::shared_ptr<Object>>> ObjectManager::materialObjectMap{};
+#include "AssetLoader.h"
 
-std::vector<std::shared_ptr<Object>> ObjectManager::object_hierarchy{};
+std::map<std::shared_ptr<Material>, std::vector<std::shared_ptr<Object>>> ObjectManager::materialObjectMap{};
+std::vector<std::shared_ptr<Object>> ObjectManager::objectHierarchy{};
 
 void ObjectManager::AddObject(const std::shared_ptr<Object>& object)
 {
-    if (object != nullptr)
-        object_hierarchy.push_back(object);
-    if (object->material)
-        AddObjectToRender(object);
-}
-void ObjectManager::AddObjectToRender(const std::shared_ptr<Object>& object)
-{
-    ObjectManager::materialObjectMap[object->material].push_back(object);
-    std::cout << materialObjectMap.size() << std::endl;
+    if (!object) return;
+
+    objectHierarchy.push_back(object);
+    AddObjectToRender(object);
 }
 
-void ObjectManager::LoadObject(const char* filename)
+void ObjectManager::RemoveObject(const std::shared_ptr<Object>& object)
 {
-    /*std::shared_ptr<Object> object;
-    ObjectParser::ParseObject(filename, TODO);
-    AddObject(object);*/
+    if (object)
+        std::erase(objectHierarchy, object);
+    if (object->material)
+        RemoveObjectFromRender(object, object->material);
+}
+
+void ObjectManager::AddObjectToRender(const std::shared_ptr<Object>& object)
+{
+    if (!object || !object->material) return;
+    materialObjectMap[object->material].push_back(object);
+}
+
+void ObjectManager::RemoveObjectFromRender(const std::shared_ptr<Object>& object,
+                                           const std::shared_ptr<Material>& material)
+{
+    if (!object || !material) return;
+
+    auto it = materialObjectMap.find(material);
+    if (it != materialObjectMap.end())
+    {
+        auto& objects = it->second;
+        std::erase(objects, object);
+
+        if (objects.empty())
+        {
+            materialObjectMap.erase(it);
+        }
+    }
+}
+
+void ObjectManager::UpdateObjectMaterial(const std::shared_ptr<Object>& object,
+                                         const std::shared_ptr<Material>& oldMaterial,
+                                         const std::shared_ptr<Material>& newMaterial)
+{
+    if (!object) return;
+
+    if (oldMaterial)
+    {
+        RemoveObjectFromRender(object, oldMaterial);
+    }
+
+    if (newMaterial)
+    {
+        AddObjectToRender(object);
+    }
+}
+
+std::shared_ptr<Object> ObjectManager::AddEmpty(std::string& name)
+{
+    auto object = std::make_shared<Object>(Engine::GUID::Generate(), name, glm::vec3(0),
+                                           glm::vec3(0), glm::vec3(1), true);
+    AddObject(object);
+    return object;
+}
+
+void ObjectManager::CreatePrimitive(Engine::GUID guid)
+{
+    std::string name = "Primitive";
+    auto primitiveObject = AddEmpty(name);
+    primitiveObject->SetModel(std::static_pointer_cast<Model>(AssetLoader::GetAsset(guid)));
 }
 
 void ObjectManager::LoadObjectFromFile()
@@ -35,13 +88,13 @@ void ObjectManager::LoadObjectFromFile()
     nfdresult_t result = NFD_OpenDialog("object", defaultPath, &outPath);
     if (result == NFD_OKAY)
     {
-        std::filesystem::path absolutePath = outPath; // Convert to filesystem path
+        std::filesystem::path absolutePath = outPath;
         std::filesystem::path relativePath = std::filesystem::relative(absolutePath, projectRoot);
 
         std::cout << "User selected file: " << absolutePath << std::endl;
         std::cout << "Relative path: " << relativePath << std::endl;
-        std::string relativePathStr = relativePath.string();
-        LoadObject(relativePathStr.c_str());
+
+        // LoadObject(relativePath.string().c_str());
         free(outPath);
     }
     else if (result == NFD_CANCEL)
@@ -51,22 +104,5 @@ void ObjectManager::LoadObjectFromFile()
     else
     {
         std::cerr << "Error: " << NFD_GetError() << std::endl;
-    }
-}
-
-void ObjectManager::AddEmpty(std::string& name)
-{
-    std::shared_ptr<Object> object = std::make_shared<Object>(Engine::GUID::Generate(),  name, glm::vec3(0), glm::vec3(0), glm::vec3(1),
-                                                              true);
-    object_hierarchy.push_back(object);
-}
-
-void ObjectManager::InitMaterialMap()
-{
-    materialObjectMap.clear();
-    for (const auto& obj : ObjectManager::object_hierarchy)
-    {
-        if (obj->material != nullptr)
-            ObjectManager::materialObjectMap[obj->material].push_back(obj);
     }
 }

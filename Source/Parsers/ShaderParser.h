@@ -13,21 +13,22 @@ public:
         std::string vertex, fragment;
     };
 
-    static void CheckCompileErrors(unsigned int shader, std::string type)
+    static bool CheckCompileErrors(unsigned int shader, const std::string& type)
     {
         int success;
         char infoLog[1024];
+
         if (type != "PROGRAM")
         {
             glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
             if (!success)
             {
                 glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-                std::cout
-                    << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n"
-                    << infoLog
-                    << "\n -- --------------------------------------------------- -- "
-                    << std::endl;
+                std::cerr << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n"
+                          << infoLog
+                          << "\n -- --------------------------------------------------- -- "
+                          << std::endl;
+                return false;
             }
         }
         else
@@ -36,16 +37,18 @@ public:
             if (!success)
             {
                 glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-                std::cout
-                    << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n"
-                    << infoLog
-                    << "\n -- --------------------------------------------------- -- "
-                    << std::endl;
+                std::cerr << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n"
+                          << infoLog
+                          << "\n -- --------------------------------------------------- -- "
+                          << std::endl;
+                return false;
             }
         }
+        return true;
     }
 
-    static ShaderProgramSource ParseShader(const char* filePath)
+
+    static ShaderProgramSource ParseShaderFile(const char* filePath)
     {
         enum class ShaderType { NONE = -1, VERTEX = 0, FRAGMENT = 1, GEOMETRY = 2 };
         ShaderType type = ShaderType::NONE;
@@ -155,96 +158,5 @@ public:
         }
 
         return params;
-    }
-
-    static void SaveShaderParamsToJson(const ShaderParams& params, const std::string& filePath)
-    {
-        nlohmann::json jsonData;
-        jsonData["shaderFile"] = params.shaderIDString;
-        // Convert texture parameters
-        jsonData["textureParams"] = nlohmann::json::array();
-        for (std::map<std::string, std::shared_ptr<Texture>>::const_iterator it = params.textureParameters.begin(); it
-             !=
-             params.textureParameters.end(); ++it)
-        {
-            if (it->second)
-            {
-                // Check if texture exists
-                jsonData["textureParams"].push_back({
-                    {"name", it->first},
-                    {"filePath", it->second->GetFilePath()} // Assuming Texture has GetFilePath() method
-                });
-            }
-        }
-
-        // Convert float parameters
-        jsonData["floatParams"] = nlohmann::json::array();
-        for (std::map<std::string, float>::const_iterator it = params.floatParameters.begin(); it != params.
-             floatParameters.
-             end(); ++it)
-        {
-            jsonData["floatParams"].push_back({
-                {"name", it->first},
-                {"value", it->second}
-            });
-        }
-
-        // Convert int parameters
-        jsonData["intParams"] = nlohmann::json::array();
-        for (std::map<std::string, int>::const_iterator it = params.intParameters.begin(); it != params.intParameters.
-             end();
-             ++it)
-        {
-            jsonData["intParams"].push_back({
-                {"name", it->first},
-                {"value", it->second}
-            });
-        }
-
-        // Convert vec2 parameters
-        jsonData["vec2Params"] = nlohmann::json::array();
-        for (std::map<std::string, glm::vec2>::const_iterator it = params.vec2Parameters.begin(); it != params.
-             vec2Parameters.end(); ++it)
-        {
-            jsonData["vec2Params"].push_back({
-                {"name", it->first},
-                {"value", {it->second.x, it->second.y}}
-            });
-        }
-
-        // Convert vec3 parameters
-        jsonData["vec3Params"] = nlohmann::json::array();
-        for (std::map<std::string, glm::vec3>::const_iterator it = params.vec3Parameters.begin(); it != params.
-             vec3Parameters.end(); ++it)
-        {
-            jsonData["vec3Params"].push_back({
-                {"name", it->first},
-                {"value", {it->second.x, it->second.y, it->second.z}}
-            });
-        }
-
-        // Convert vec4 parameters
-        jsonData["vec4Params"] = nlohmann::json::array();
-        for (std::map<std::string, glm::vec4>::const_iterator it = params.vec4Parameters.begin(); it != params.
-             vec4Parameters.end(); ++it)
-        {
-            jsonData["vec4Params"].push_back({
-                {"name", it->first},
-                {"value", {it->second.x, it->second.y, it->second.z, it->second.w}}
-            });
-        }
-
-        // Write to file
-        std::ofstream file(filePath);
-        if (file.is_open())
-        {
-            file << jsonData.dump(4); // Pretty print JSON with indentation
-            file.close();
-            std::cout << "Shader parameters saved to " << filePath << std::endl;
-        }
-        else
-        {
-            std::cerr << "Failed to open file for writing: " << filePath << std::endl;
-        }
     }
 };

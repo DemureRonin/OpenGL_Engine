@@ -9,11 +9,11 @@
 #include "../Engine/Transform.h"
 
 
-class HierarchyUIWindow
+class HierarchyUIWindow : public UIWindow
 {
 public:
+    HierarchyUIWindow(const char* inName, Engine::UIID inUIID, const std::shared_ptr<UIManager>& inUIManager);
+    void Render() override;
+    bool showAddObjectWindow = false;
     static unsigned int hierarchyCounter;
-    static void Render(const std::vector<std::shared_ptr<Object>>& objects);
-    
 };
-

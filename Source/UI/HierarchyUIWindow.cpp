@@ -2,45 +2,71 @@
 
 #include "Toolbar.h"
 #include "../Engine/Managers/ObjectManager.h"
+#include "../../Source/Engine/Managers/AssetLoader.h"
 
 unsigned int HierarchyUIWindow::hierarchyCounter = 0;
-static bool showAddObjectWindow = false;
 
-void HierarchyUIWindow::Render(const std::vector<std::shared_ptr<Object>>& objects)
+
+HierarchyUIWindow::HierarchyUIWindow(const char* inName, Engine::UIID inUIID,
+                                     const std::shared_ptr<UIManager>& inUIManager): UIWindow(
+    inName, inUIID, inUIManager)
 {
-    ImGui::Begin("Hierarchy");
+}
 
-    // ImGui::SameLine();
-    if (ImGui::Button("+"))
-    {
-        showAddObjectWindow = !showAddObjectWindow; // Toggle the new window visibility
-    }
+void HierarchyUIWindow::Render()
+{
+    const std::vector<std::shared_ptr<Object>>& objects = ObjectManager::objectHierarchy;
+    std::string windowName = std::string(name) + "###" + std::to_string(UIID.id);
 
-    // ImGui::Separator();
-    int counter = 0;
-    for (const auto& obj : objects)
+    if (ImGui::Begin(windowName.c_str()))
     {
-        std::string buttonLabel = obj->name + "##" + std::to_string(counter);
-        if (ImGui::Button(buttonLabel.c_str(), ImVec2(-1, 0)))
+        RenderPopUp();
+
+        if (ImGui::Button("+"))
         {
-            InspectorUIWindow::SetObject(obj);
+            ImGui::OpenPopup("AddObjectPopup");
         }
-        counter++;
-    }
 
+        // Popup for adding objects
+        if (ImGui::BeginPopup("AddObjectPopup"))
+        {
+            if (ImGui::MenuItem("Create Empty"))
+            {
+                std::string name = ("Empty");
+                ObjectManager::AddEmpty(name);
+            }
+
+            if (ImGui::BeginMenu("Create 3D Object"))
+            {
+                if (ImGui::MenuItem("Sphere"))
+                {
+                    ObjectManager::CreatePrimitive(Engine::GUID::FromString(PRIMITIVE_SPHERE));
+                }
+                if (ImGui::MenuItem("Cube"))
+                {
+                    ObjectManager::CreatePrimitive(Engine::GUID::FromString(PRIMITIVE_CUBE));
+                }
+                if (ImGui::MenuItem("Plane"))
+                {
+                    ObjectManager::CreatePrimitive(Engine::GUID::FromString(PRIMITIVE_PLANE));
+                }
+                ImGui::EndMenu();
+            }
+
+            ImGui::EndPopup();
+        }
+
+        ImGui::Separator();
+        int counter = 0;
+        for (const auto& obj : objects)
+        {
+            std::string buttonLabel = obj->name + "##" + std::to_string(counter);
+            if (ImGui::Button(buttonLabel.c_str(), ImVec2(-1, 0)))
+            {
+                InspectorUIWindow::SetObject(obj);
+            }
+            counter++;
+        }
+    }
     ImGui::End();
-    if (showAddObjectWindow)
-    {
-        ImGui::Begin("Add Object", &showAddObjectWindow, ImGuiWindowFlags_AlwaysAutoResize);
-
-        if (ImGui::Button("Add Empty"))
-        {
-            std::string str = "Empty";
-           ObjectManager::AddEmpty(str);
-            showAddObjectWindow = false; // Close the window after adding
-        }
-
-        ImGui::End();
-    }
-
 }

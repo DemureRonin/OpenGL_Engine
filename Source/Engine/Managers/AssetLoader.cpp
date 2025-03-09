@@ -14,35 +14,100 @@ std::unordered_map<Engine::GUID, std::shared_ptr<Texture>> AssetLoader::textures
 std::unordered_map<Engine::GUID, std::shared_ptr<Material>> AssetLoader::materials{};
 std::unordered_map<Engine::GUID, std::shared_ptr<Shader>> AssetLoader::shaders{};
 std::unordered_map<Engine::GUID, std::shared_ptr<Object>> AssetLoader::objects{};
+std::string AssetLoader::projectRootPath;
+std::string AssetLoader::projectAssetsPath;
+
+static std::filesystem::path FindProjectRoot()
+{
+    std::filesystem::path path = std::filesystem::current_path();
+
+    while (!path.empty())
+    {
+        if (std::filesystem::exists(path / "Assets"))
+        {
+            AssetLoader::projectRootPath = path.string();
+            AssetLoader::projectAssetsPath = path.string() + "/Assets";
+            return AssetLoader::projectRootPath;
+        }
+        path = path.parent_path();
+    }
+
+    return {};
+}
 
 void AssetLoader::LoadResources()
 {
-    Engine::GUID guid = Engine::GUID::FromString(std::string(TEXTURE_WHITE_1X1));
-    textures[guid] = std::make_shared<Texture>("Resources/1x1_white.jpeg", guid);
-    assets[guid] = textures[guid];
+    Engine::GUID guid;
 
-    guid = Engine::GUID::FromString(std::string(TEXTURE_MATERIAL_ERROR));
-    textures[guid] = std::make_shared<Texture>("Resources/200px-Debugempty.png", guid);
-    assets[guid] = textures[guid];
-
-    guid = Engine::GUID::FromString(std::string(SHADER_UNLIT_GUID));
-    shaders[guid] = std::make_shared<Shader>("Resources/Unlit.glsl", guid);
+    guid = Engine::GUID::FromString(std::string(SHADER_UNLIT));
+    shaders[guid] = std::make_shared<Shader>((projectRootPath + "/Resources/Unlit.glsl").c_str(), guid);
     assets[guid] = shaders[guid];
 
+    guid = Engine::GUID::FromString(std::string(SHADER_LIT));
+    shaders[guid] = std::make_shared<Shader>((projectRootPath + "/Resources/Lit.glsl").c_str(), guid);
+    assets[guid] = shaders[guid];
+
+    guid = Engine::GUID::FromString(std::string(SHADER_POSTPROCESSING));
+    shaders[guid] = std::make_shared<Shader>((projectRootPath + "/Resources/PostProcessing.glsl").c_str(), guid);
+    assets[guid] = shaders[guid];
+
+    guid = Engine::GUID::FromString(std::string(TEXTURE_WHITE_1X1));
+    textures[guid] = std::make_shared<Texture>(projectRootPath + "/Resources/1x1_white.jpeg", guid);
+    assets[guid] = textures[guid];
+
+    guid = Engine::GUID::FromString(std::string(TEXTURE_FLAT_NORMAL_1X1));
+    textures[guid] = std::make_shared<Texture>(projectRootPath + "/Resources/1x1_flat_normal.png", guid);
+    assets[guid] = textures[guid];
+
+
+    guid = Engine::GUID::FromString(std::string(TEXTURE_MATERIAL_ERROR));
+    textures[guid] = std::make_shared<Texture>(projectRootPath + "/Resources/200px-Debugempty.png", guid);
+    assets[guid] = textures[guid];
+
+
     guid = Engine::GUID::FromString(std::string(MATERIAL_ERROR));
-    materials[guid] = MaterialParser::ParseMaterial("Resources/material_error.mat", guid);
+    materials[guid] =
+        MaterialParser::ParseMaterial((projectRootPath + "/Resources/ErrorMaterial.mat").c_str(), guid);
+    assets[guid] = materials[guid];
+
+    guid = Engine::GUID::FromString(std::string(MATERIAL_LIT));
+    materials[guid] =
+        MaterialParser::ParseMaterial((projectRootPath + "/Resources/LitMaterial.mat").c_str(), guid);
+    assets[guid] = materials[guid];
+
+    guid = Engine::GUID::FromString(std::string(MATERIAL_UNLIT));
+    materials[guid] =
+        MaterialParser::ParseMaterial((projectRootPath + "/Resources/UnlitMaterial.mat").c_str(), guid);
+    
     assets[guid] = materials[guid];
 
     guid = Engine::GUID::FromString(std::string(VIEWPORT_RENDER_QUAD));
-    models[guid] = std::make_shared<Model>("Resources/quad.obj", guid);
+    models[guid] = std::make_shared<Model>(projectRootPath + "/Resources/quad.obj", guid);
+    assets[guid] = models[guid];
+
+
+    guid = Engine::GUID::FromString(std::string(PRIMITIVE_CUBE));
+    std::string name = projectRootPath + "/Resources/cube.obj";
+    models[guid] = std::make_shared<Model>(name.c_str(), guid);
+    assets[guid] = models[guid];
+
+    guid = Engine::GUID::FromString(std::string(PRIMITIVE_SPHERE));
+    name = projectRootPath + "/Resources/sphere.obj";
+    models[guid] = std::make_shared<Model>(name.c_str(), guid);
+    assets[guid] = models[guid];
+
+    guid = Engine::GUID::FromString(std::string(PRIMITIVE_PLANE));
+    name = projectRootPath + "/Resources/plane.obj";
+    models[guid] = std::make_shared<Model>(name.c_str(), guid);
     assets[guid] = models[guid];
 }
 
 void AssetLoader::LoadAssets()
 {
+    FindProjectRoot();
     LoadResources();
 
-    const std::string directoryPath = "Assets";
+    const std::string directoryPath = projectAssetsPath;
     if (!std::filesystem::exists(directoryPath) || !std::filesystem::is_directory(directoryPath))
     {
         std::cerr << "Directory not found: " << directoryPath << std::endl;
@@ -76,8 +141,8 @@ void AssetLoader::LoadAssets()
         {
             continue;
         }
-        auto it = extensionMap.find(extension);
-        AssetType type = it != extensionMap.end() ? it->second : AssetType::Unknown;
+        auto it = Asset::extensionMap.find(extension);
+        AssetType type = it != Asset::extensionMap.end() ? it->second : AssetType::Unknown;
 
         switch (type)
         {
@@ -123,6 +188,18 @@ void AssetLoader::LoadAssets()
     {
         objects[guid] = ObjectParser::ParseObject(path.c_str(), guid);
         assets[guid] = objects[guid];
+    }
+}
+
+void AssetLoader::Save()
+{
+    for (auto& [guid, obj] : objects)
+    {
+        ObjectParser::SaveObject(obj->GetAssetPath().c_str(), obj);
+    }
+    for (auto& [guid, mat] : materials)
+    {
+        MaterialParser::SaveMaterial(mat, mat->GetAssetPath().c_str());
     }
 }
 

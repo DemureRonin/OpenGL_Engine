@@ -22,10 +22,11 @@ class Material;
 
 class Shader : public ProgramObject, public Asset
 {
+private:
+    bool m_CompiledSuccessfully = true;
+
 public:
     Shader(const char* filePath, Engine::GUID inGUID);
-    std::string GetFilePath() { return assetPath; }
-
     void Bind() const override;
     void Unbind() const override;
     void SetBool(const std::string& name, bool value) const;
@@ -37,8 +38,9 @@ public:
     void SetMat4(glm::mat4 mat4, std::string name) const;
     void SetVec4(const std::string& name, glm::vec4 vec4) const;
     void SetMaterialUniforms(const std::shared_ptr<Material>& material) const;
+    void SetCameraUniforms(const Camera& camera);
     void SetObjectUniforms(const Camera& camera, const Object& object) const;
     void SetDirectionalLightUniforms(const DirectionalLight& dirLight) const;
 
-    
+    bool CompiledSuccessfully() const { return m_CompiledSuccessfully; }
 };

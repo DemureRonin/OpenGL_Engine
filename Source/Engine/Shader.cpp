@@ -9,7 +9,7 @@
 
 Shader::Shader(const char* filePath, Engine::GUID inGUID): Asset(filePath, AssetType::Shader, inGUID)
 {
-    const auto shaderSource = ShaderParser::ParseShader(filePath);
+    const auto shaderSource = ShaderParser::ParseShaderFile(filePath);
 
     const char* vShaderCode = shaderSource.vertex.c_str();
     const char* fShaderCode = shaderSource.fragment.c_str();
@@ -17,18 +17,19 @@ Shader::Shader(const char* filePath, Engine::GUID inGUID): Asset(filePath, Asset
     unsigned int vertex = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertex, 1, &vShaderCode, NULL);
     glCompileShader(vertex);
-    ShaderParser::CheckCompileErrors(vertex, "VERTEX");
+
+    m_CompiledSuccessfully &= ShaderParser::CheckCompileErrors(vertex, "VERTEX");
 
     unsigned int fragment = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragment, 1, &fShaderCode, NULL);
     glCompileShader(fragment);
-    ShaderParser::CheckCompileErrors(fragment, "FRAGMENT");
+    m_CompiledSuccessfully &= ShaderParser::CheckCompileErrors(fragment, "FRAGMENT");
 
     m_RendererID = glCreateProgram();
     glAttachShader(m_RendererID, vertex);
     glAttachShader(m_RendererID, fragment);
     glLinkProgram(m_RendererID);
-    ShaderParser::CheckCompileErrors(m_RendererID, "PROGRAM");
+    m_CompiledSuccessfully &= ShaderParser::CheckCompileErrors(m_RendererID, "PROGRAM");
 
     glDeleteShader(vertex);
     glDeleteShader(fragment);
@@ -134,6 +135,16 @@ void Shader::SetMaterialUniforms(const std::shared_ptr<Material>& material) cons
     }
 }
 
+void Shader::SetCameraUniforms(const Camera& camera)
+{
+    glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom),
+                                            static_cast<float>(camera.aspectX) / static_cast<float>(camera.aspectY),
+                                            0.1f, 1000.0f);
+    glm::mat4 view = camera.GetViewMatrix();
+    glm::mat4 MVPmat4 = projection * view;
+    SetMat4(MVPmat4, "MVPmat4");
+}
+
 void Shader::SetObjectUniforms(const Camera& camera, const Object& object) const
 {
     glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom),
@@ -159,4 +170,3 @@ void Shader::SetDirectionalLightUniforms(const DirectionalLight& dirLight) const
     SetVec3("directionalLight.diffuse", dirLight.diffuse);
     SetVec3("directionalLight.specular", dirLight.specular);
 }
-

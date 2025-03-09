@@ -5,7 +5,7 @@
 #include <assimp/postprocess.h>
 
 #include "Asset.h"
-#include "GUID.h"
+#include "EngineID/GUID.h"
 #include "Mesh.h"
 
 class Model : public Asset

@@ -19,5 +19,7 @@ private:
 
 public:
     static std::vector<std::shared_ptr<Material>> materials;
+    static std::shared_ptr<ShaderParams> LoadShaderParams(const json& data);
     static std::shared_ptr<Material> ParseMaterial(const char* assetPath, Engine::GUID inGUID);
+    static void SaveMaterial(const std::shared_ptr<Material>& material, const char* assetPath);
 };

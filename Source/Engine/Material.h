@@ -23,9 +23,8 @@ public:
 
     bool operator<(const Material& other) const
     {
-        return guid.ToString() < other.guid.ToString();
+        return GetGUID().ToString() < other.GetGUID().ToString();
     }
-
-    std::string GetFilePath() const { return assetPath; }
+    
     bool IsLoaded();
 };

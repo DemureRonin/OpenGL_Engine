@@ -12,10 +12,10 @@ namespace Engine {
             GUID guid;
             std::random_device rd;
             std::mt19937 gen(rd());
-            std::uniform_int_distribution<uint32_t> dist(0, 255); // Use uint32_t instead
+            std::uniform_int_distribution<uint32_t> dist(0, 255);
 
             for (auto& byte : guid.data) {
-                byte = static_cast<uint8_t>(dist(gen)); // Convert to uint8_t
+                byte = static_cast<uint8_t>(dist(gen)); 
             }
             return guid;
         }
@@ -25,10 +25,9 @@ namespace Engine {
             std::string segment;
             size_t index = 0;
 
-            // Remove dashes and parse hex values
             for (char c : str) {
                 if (c != '-') {
-                    if (index >= 32) break; // Ensure we don't exceed 16 bytes (32 hex digits)
+                    if (index >= 32) break; 
                     segment += c;
                 }
             }
@@ -37,7 +36,6 @@ namespace Engine {
                 throw std::invalid_argument("Invalid GUID format: " + str);
             }
 
-            // Convert hex string to bytes
             for (size_t i = 0; i < 16; ++i) {
                 std::string byteStr = segment.substr(i * 2, 2);
                 guid.data[i] = static_cast<uint8_t>(std::stoul(byteStr, nullptr, 16));
@@ -49,7 +47,7 @@ namespace Engine {
             std::ostringstream oss;
             for (size_t i = 0; i < data.size(); ++i) {
                 if (i == 4 || i == 6 || i == 8 || i == 10) oss << "-";
-                oss << std::hex << std::setw(2) << std::setfill('0') << (int)data[i];
+                oss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(data[i]);
             }
             return oss.str();
         }
@@ -63,11 +61,12 @@ namespace Engine {
     };
 }
 
-// Hash function for unordered_map support
+
 namespace std {
     template<>
     struct hash<Engine::GUID> {
-        size_t operator()(const Engine::GUID& guid) const {
+        size_t operator()(const Engine::GUID& guid) const noexcept
+        {
             size_t hash = 0;
             for (auto byte : guid.data) {
                 hash = (hash * 31) ^ byte;

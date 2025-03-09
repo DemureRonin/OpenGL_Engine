@@ -1,22 +1,24 @@
 ﻿#include "ObjectParser.h"
-
 #include "MaterialParser.h"
-#include "MeshParser.h"
 #include "../Engine/ConsoleDebug/ConsoleDebug.h"
 #include "../Engine/ConsoleDebug/DebugUtils.h"
 #include "../Engine/Managers/AssetLoader.h"
 
 const char* ObjectParser::m_DebugName = "OBJECT_PARSER";
 
-std::shared_ptr<Object> ObjectParser::CreateErrorObject()
-{
-    /*std::string name = "ERROR";
-    std::shared_ptr<Object> errorObject = std::make_shared<Object>(name, glm::vec3(0), glm::vec3(0), glm::vec3(1),
-                                                                   false);
-    return errorObject;*/
-    return nullptr;
-}
 
+glm::vec3 ObjectParser::ParseVec3(const json& j, const std::string& key)
+{
+    if (j.contains(key) && j[key].is_array() && j[key].size() == 3)
+    {
+        return {
+            j[key][0].get<float>(),
+            j[key][1].get<float>(),
+            j[key][2].get<float>()
+        };
+    }
+    return glm::vec3(0.0f);
+}
 
 std::shared_ptr<Object> ObjectParser::ParseObject(const char* filePath, Engine::GUID inGUID)
 {
@@ -24,7 +26,6 @@ std::shared_ptr<Object> ObjectParser::ParseObject(const char* filePath, Engine::
     if (!file.is_open())
     {
         ConsoleDebug::PrintFileError(m_DebugName, filePath, "Falling back to default object");
-        //  object = ObjectParser::CreateErrorObject();
         return nullptr;
     }
 
@@ -37,32 +38,29 @@ std::shared_ptr<Object> ObjectParser::ParseObject(const char* filePath, Engine::
     {
         ConsoleDebug::PrintFileError(m_DebugName, filePath, e.what());
         file.close();
-
         return nullptr;
     }
     file.close();
 
-    std::string name = j["name"].get<std::string>();
+   
+    std::string name = j.value("name", "Unnamed Object");
+    glm::vec3 position = ParseVec3(j, "position");
+    glm::vec3 rotation = ParseVec3(j, "rotation");
+    glm::vec3 scale = ParseVec3(j, "scale");
 
-    glm::vec3 position = glm::vec3(j["position"][0].get<float>(), j["position"][1].get<float>(),
-                                   j["position"][2].get<float>());
-    glm::vec3 rotation = glm::vec3(j["rotation"][0].get<float>(), j["rotation"][1].get<float>(),
-                                   j["rotation"][2].get<float>());
-    glm::vec3 scale = glm::vec3(j["scale"][0].get<float>(), j["scale"][1].get<float>(), j["scale"][2].get<float>());
+ 
+    Engine::GUID modelID = Engine::GUID::FromString(j.value("modelGUID", ""));
+    Engine::GUID materialID = Engine::GUID::FromString(j.value("materialGUID", ""));
 
-    auto modelID = Engine::GUID::FromString(j["modelGUID"].get<std::string>());
-    auto materialID = Engine::GUID::FromString(j["materialGUID"].get<std::string>());
+    auto createdObject = std::make_shared<Object>(inGUID, name, position, rotation, scale, true, filePath);
 
-    std::shared_ptr<Object> createdObject = std::make_shared<Object>(inGUID, name, position, rotation, scale, true,
-                                                                     filePath);
+  
     auto objectModel = std::static_pointer_cast<Model>(AssetLoader::GetAsset(modelID));
-
-
     auto objectMat = std::static_pointer_cast<Material>(AssetLoader::GetAsset(materialID));
 
-    if (objectModel != nullptr)
+    if (objectModel)
         createdObject->SetModel(objectModel);
-    if (objectMat != nullptr)
+    if (objectMat)
         createdObject->SetMaterial(objectMat);
 
     std::string message = std::string(filePath) + " Loaded Successfully";
@@ -73,26 +71,22 @@ std::shared_ptr<Object> ObjectParser::ParseObject(const char* filePath, Engine::
 
 int ObjectParser::SaveObject(const char* filePath, const std::shared_ptr<Object>& object)
 {
-    /*if (!object->loadedSuccessfully)
+    if (!object->loadedSuccessfully)
     {
         ConsoleDebug::PrintError(m_DebugName, "Could not save object");
         return 1;
     }
-    nlohmann::json jsonObject = {
+
+   
+    json jsonObject = {
+        {"GUID", object->GetGUID().ToString()},
+        {"modelGUID", object->model ? object->model->GetGUID().ToString() : ""},
+        {"materialGUID", object->material ? object->material->GetGUID().ToString() : ""},
         {"name", object->name},
         {"position", {object->transform.position.x, object->transform.position.y, object->transform.position.z}},
         {"rotation", {object->transform.rotation.x, object->transform.rotation.y, object->transform.rotation.z}},
-        {"scale", {object->transform.scale.x, object->transform.scale.y, object->transform.scale.z}},
-
+        {"scale", {object->transform.scale.x, object->transform.scale.y, object->transform.scale.z}}
     };
-    if (object->mesh != nullptr)
-        jsonObject.push_back({"mesh", " "});
-    else jsonObject.push_back({"mesh", ""});
-    
-    if (object->material != nullptr)
-        jsonObject.push_back({"material", object->material->GetFilePath()});
-    else jsonObject.push_back({"material", ""});
-
 
     std::ofstream file(filePath);
     if (file.is_open())
@@ -106,7 +100,7 @@ int ObjectParser::SaveObject(const char* filePath, const std::shared_ptr<Object>
     {
         ConsoleDebug::PrintFileError(m_DebugName, filePath, "Could not save object");
         return 1;
-    }*/
+    }
 
     return 0;
 }

@@ -2,7 +2,6 @@
 #include "Shader.h"
 #include "Buffers/FBO/FrameBuffer.h"
 #include "Buffers/RBO/RenderBufferObject.h"
-#include "../Parsers/MeshParser.h"
 #include "Object.h"
 
 class RenderTexture

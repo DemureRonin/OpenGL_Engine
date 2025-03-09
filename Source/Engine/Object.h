@@ -33,11 +33,11 @@ public:
     std::shared_ptr<Model> model = nullptr;
     std::shared_ptr<Material> material = nullptr;
     bool loadedSuccessfully;
-    std::string GetFilePath() { return assetPath; }
+ 
 
     void Draw();
 
-    void SetModel(const std::shared_ptr<Model>& newMesh);
+    void SetModel(const std::shared_ptr<Model>& newModel);
 
     void SetMaterial(const std::shared_ptr<Material>& newMaterial);
 };

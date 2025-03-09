@@ -38,6 +38,7 @@ void main()
 
 struct Material {
 	sampler2D albedo;
+	vec4 tint;
 };
 
 
@@ -59,6 +60,6 @@ out vec4 FragColor;
 
 void main() {
 	vec4 tex = texture(material.albedo, interpolators.UV);
-	FragColor = tex;
+	FragColor = tex * material.tint;
 }
 

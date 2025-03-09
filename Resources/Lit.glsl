@@ -7,7 +7,6 @@ layout (location = 3) in vec3 aTangent;
 layout (location = 4) in vec3 aBiTangent;
 
 struct Interpolators {
-	//vec3 ViewPosition;
 	vec3 WorldPosition;
 	vec4 LocalPosition;
 	vec3 Normal;
@@ -28,7 +27,6 @@ void main()
 {
 	interpolators.LocalPosition = vec4(aPos, 1.0);
 	interpolators.WorldPosition = vec3(Mmat4 * interpolators.LocalPosition);
-	//interpolators.ViewPosition = vec3(Vmat4 * interpolators.WorldPosition);
 	interpolators.Tangent = vec3(aTangent.xyz);
 	interpolators.Normal = mat3(transpose(inverse(Mmat4))) * aNormal;
 	interpolators.UV = aUV;
@@ -96,9 +94,8 @@ void main() {
 
 	float smoothness = mix(0.0001, MAX_SMOOTHNESS_EXPONENT, material.shininess);
 	vec4 albedoTex = texture(material.albedo, interpolators.UV) * material.tint;
-
-
-	vec3 specularTint; // MetallicProperty
+	
+	vec3 specularTint; 
 	float oneMinusReflectivity;
 	vec3 albedo = DiffuseAndSpecularFromMetallic(albedoTex.rgb, material.metallicProperty, specularTint, oneMinusReflectivity);
 	vec4 diffuse = lightColor * vec4(albedo, 1) * max(0.0, dot(lightDir, normal));
@@ -148,12 +145,12 @@ out vec3 specColor, out float oneMinusReflectivity
 vec3 CalcDirLight(DirectionalLight light, vec3 normal, vec3 cameraPosition, vec4 specularMap, vec4 albedo)
 {
 	vec3 lightDir = normalize(-light.direction);
-	// diffuse shading
+
 	float diff = max(dot(normal, lightDir), 0.0);
-	// specular shading
+	
 	vec3 reflectDir = reflect(-lightDir, normal);
 	float spec = pow(max(dot(cameraPosition, reflectDir), 0.0), material.shininess);
-	// combine results
+
 	vec3 ambient = light.ambient * albedo.xyz;
 	vec3 diffuse = light.diffuse * diff * albedo.xyz;
 	vec3 specular = light.specular * spec * specularMap.xyz;
@@ -162,16 +159,16 @@ vec3 CalcDirLight(DirectionalLight light, vec3 normal, vec3 cameraPosition, vec4
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 worldPosition, vec3 cameraPosition)
 {
 	vec3 lightDir = normalize(light.position - worldPosition);
-	// diffuse shading
+
 	float diff = max(dot(normal, lightDir), 0.0);
-	// specular shading
+
 	vec3 reflectDir = reflect(-lightDir, normal);
 	float spec = pow(max(dot(cameraPosition, reflectDir), 0.0), material.shininess);
-	// attenuation
+	
 	float distance = length(light.position - worldPosition);
 	float attenuation = 1.0 / (light.constant + light.linear * distance +
 	light.quadratic * (distance * distance));
-	// combine results
+	
 	vec3 ambient = light.ambient;
 	vec3 diffuse = light.diffuse;
 	vec3 specular = light.specular;

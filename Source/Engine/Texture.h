@@ -19,7 +19,7 @@ public:
     ~Texture() override;
     
     void LoadTexture();
-    std::string GetFilePath() { return assetPath; }
+    
   
     void Bind(unsigned int slot = 0) const;
     void Unbind() const;

@@ -3,7 +3,7 @@
 void Model::LoadModel()
 {
     Assimp::Importer import;
-    const aiScene* scene = import.ReadFile(assetPath, aiProcess_Triangulate | aiProcess_FlipUVs);
+    const aiScene* scene = import.ReadFile(GetAssetPath(), aiProcess_Triangulate | aiProcess_FlipUVs);
 
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {

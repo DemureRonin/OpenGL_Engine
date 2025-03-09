@@ -1,53 +1,27 @@
 #define GLFW_INCLUDE_NONE
 
-#include <algorithm>
-
 #include <glm/glm.hpp>
 
 #include "InputProcessor.h"
-#include "Engine/GUID.h"
-
 #include "Engine/RenderTexture.h"
-#include "Engine/Buffers/FBO/FrameBuffer.h"
-#include "Engine/Buffers/RBO/RenderBufferObject.h"
-
 #include "Engine/Initialization/GLADInitializer.h"
 #include "Engine/Initialization/GLFWInitializer.h"
 #include "Engine/Initialization/ImGUIInitializer.h"
 #include "Engine/Managers/AssetLoader.h"
 #include "Engine/Managers/ObjectManager.h"
-
 #include "Engine/Time/Time.h"
-#include "nativefiledialog/nfd.h"
+#include "imgui/imgui.h"
 #include "Parsers/MaterialParser.h"
-#include "Parsers/MeshParser.h"
-#include "Utils/Primitives/CubePositions.h"
-
-#include "Parsers/ObjectParser.h"
 #include "UI/DirectionalLightUIWindow.h"
 #include "UI/HierarchyUIWindow.h"
-#include "UI/MaterialUIWindow.h"
-
-
-#include <iostream>
-
-#include "Engine/Test.h"
-#include "imgui/imgui.h"
 #include "UI/InspectorUIWindow.h"
+#include "UI/MaterialUIWindow.h"
 #include "UI/ProjectUIWindow.h"
-#include "UI/RendererUIWindow.h"
 #include "UI/SceneUIWindow.h"
 #include "UI/Toolbar.h"
-#include "Utils/Colors.h"
 
 int main()
 {
-    Test::PrintFilePath();
-    while (true)
-    {
-        
-    }
-    return EXIT_SUCCESS;
     auto window = GLFWInitializer::InitGLFW();
     if (!window) return -1;
 
@@ -55,15 +29,15 @@ int main()
 
     InputProcessor::InitCallbacks(window, camera);
 
-    ImGuiIO io;
-    ImGUIInitializer::InitImGUI(window, io);
     if (GLADInitializer::InitGLAD()) return -1;
-    AssetLoader::LoadAssets();
+
 
     Renderer::EnableDepthTest(true);
+    AssetLoader::LoadAssets();
 
-    //glEnable(GL_BLEND);
-    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    ImGuiIO io;
+    ImGUIInitializer::InitImGUI(window, io);
+
     for (auto it : AssetLoader::objects)
     {
         ObjectManager::AddObject(it.second);
@@ -71,6 +45,8 @@ int main()
     DirectionalLight dirLight;
 
     SceneUIWindow scene(camera, Renderer::GetViewport().x, Renderer::GetViewport().y);
+    auto uiManager = std::make_shared<UIManager>();
+    uiManager->CreateBasicLayout();
 
     while (!glfwWindowShouldClose(window))
     {
@@ -78,12 +54,7 @@ int main()
         Renderer::NewFrame();
         ImGUIInitializer::NewFrame();
 
-
-        Toolbar::Render();
-        InspectorUIWindow::Render();
-        HierarchyUIWindow::Render(ObjectManager::object_hierarchy);
-        ProjectUIWindow::RenderAssetBrowser("Assets");
-        MaterialUIWindow::Render();
+        uiManager->RenderUI();
         scene.NewFrame();
 
 
@@ -113,12 +84,12 @@ int main()
             }
         }
         scene.Render();
-
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
+    AssetLoader::Save();
     ImGUIInitializer::ShutdownImGUI();
 
     glfwTerminate();

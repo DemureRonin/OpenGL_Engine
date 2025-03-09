@@ -21,7 +21,6 @@ RenderTexture::RenderTexture(const std::shared_ptr<Camera>& camera)
     std::cout << mesh->assetPath << std::endl;
    // object->model = mesh;*/
 
-
     FBO.CheckFBOStatus();
     FBO.Unbind();
 }

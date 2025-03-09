@@ -5,7 +5,7 @@
 void Texture::LoadTexture()
 {
     stbi_set_flip_vertically_on_load(true);
-    m_LocalBuffer = stbi_load(assetPath.c_str(), &m_Width,
+    m_LocalBuffer = stbi_load(GetAssetPath().c_str(), &m_Width,
                               &m_Height, &m_BPP, 4);
     glGenTextures(1, &m_RendererID);
     glBindTexture(GL_TEXTURE_2D, m_RendererID);
@@ -25,7 +25,7 @@ void Texture::LoadTexture()
     }
     else
     {
-        std::cout << TEXTURE_LOG << "\033[31m Failed to load \033[0m" << assetPath << std::endl;
+        std::cout << TEXTURE_LOG << "\033[31m Failed to load \033[0m" << GetAssetPath() << std::endl;
     }
     Unbind();
 }

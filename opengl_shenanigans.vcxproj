@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="Libraries\Include\glm\detail\glm.cpp" />
     <ClCompile Include="Libraries\Include\glm\glm.cppm" />
+    <ClCompile Include="Source\Engine\Asset.cpp" />
     <ClCompile Include="Source\Engine\Buffers\EBO\IndexBuffer.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -246,6 +247,7 @@
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
     <ClCompile Include="Source\Engine\ConsoleDebug\ConsoleDebug.cpp" />
+    <ClCompile Include="Source\Engine\Initialization\ImGUIInitializer.cpp" />
     <ClCompile Include="Source\Engine\Managers\AssetLoader.cpp" />
     <ClCompile Include="Source\Engine\Managers\ObjectManager.cpp" />
     <ClCompile Include="Source\Engine\Mesh.cpp" />
@@ -783,7 +785,6 @@
     <ClCompile Include="Source\nativefiledialog\nfd_common.c" />
     <ClCompile Include="Source\nativefiledialog\nfd_win.cpp" />
     <ClCompile Include="Source\Parsers\MaterialParser.cpp" />
-    <ClCompile Include="Source\Parsers\MeshParser.cpp" />
     <ClCompile Include="Source\Parsers\ObjectParser.cpp" />
     <ClCompile Include="Source\UI\DirectionalLightUIWindow.cpp" />
     <ClCompile Include="Source\UI\HierarchyUIWindow.cpp" />
@@ -793,6 +794,8 @@
     <ClCompile Include="Source\UI\RendererUIWindow.cpp" />
     <ClCompile Include="Source\UI\SceneUIWindow.cpp" />
     <ClCompile Include="Source\UI\Toolbar.cpp" />
+    <ClCompile Include="Source\UI\UIManager.cpp" />
+    <ClCompile Include="Source\UI\UIWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Libraries\Include\glad\glad.h" />
@@ -1098,7 +1101,6 @@
     <ClInclude Include="Source\Engine\ConsoleDebug\DebugUtils.h" />
     <ClInclude Include="Source\Engine\ConsoleDebug\ConsoleDebug.h" />
     <ClInclude Include="Source\Engine\DirectionalLight.h" />
-    <ClInclude Include="Source\Engine\GUID.h" />
     <ClInclude Include="Source\Engine\Initialization\GLADInitializer.h" />
     <ClInclude Include="Source\Engine\Initialization\GLFWInitializer.h" />
     <ClInclude Include="Source\Engine\Initialization\ImGUIInitializer.h" />
@@ -1131,7 +1133,6 @@
     <ClInclude Include="Source\nativefiledialog\nfd.h" />
     <ClInclude Include="Source\nativefiledialog\nfd_common.h" />
     <ClInclude Include="Source\Parsers\MaterialParser.h" />
-    <ClInclude Include="Source\Parsers\MeshParser.h" />
     <ClInclude Include="Source\Parsers\ObjectParser.h" />
     <ClInclude Include="Source\Parsers\ShaderParser.h" />
     <ClInclude Include="Source\UI\DirectionalLightUIWindow.h" />
@@ -1142,6 +1143,8 @@
     <ClInclude Include="Source\UI\RendererUIWindow.h" />
     <ClInclude Include="Source\UI\SceneUIWindow.h" />
     <ClInclude Include="Source\UI\Toolbar.h" />
+    <ClInclude Include="Source\UI\UIManager.h" />
+    <ClInclude Include="Source\UI\UIWindow.h" />
     <ClInclude Include="Source\Utils\Colors.h" />
     <ClInclude Include="Source\Utils\json.h" />
     <ClInclude Include="Source\Utils\Primitives\CubePositions.h" />
@@ -1172,6 +1175,7 @@
     <Content Include=".vs\opengl_shenanigans\v17\ipch\AutoPCH\ea94e56f23d7f1ce\DEPENDENCIES.ipch" />
     <Content Include=".vs\opengl_shenanigans\v17\Solution.VC.db" />
     <Content Include="Assets\Fonts\0xProtoNerdFontMono-Regular.ttf" />
+    <Content Include="Assets\Fonts\FontAwesome.otf" />
     <Content Include="Assets\Fonts\JetBrainsMonoNL-Regular.ttf" />
     <Content Include="Assets\Materials\material.mat" />
     <Content Include="Assets\Materials\material1.mat" />
@@ -1204,10 +1208,18 @@
     <Content Include="opengl_shenanigans.sln" />
     <Content Include="opengl_shenanigans.vcxproj.filters" />
     <Content Include="opengl_shenanigans.vcxproj.user" />
+    <Content Include="Resources\1x1_flat_normal.png" />
     <Content Include="Resources\1x1_white.jpeg" />
     <Content Include="Resources\200px-Debugempty.png" />
-    <Content Include="Resources\material_error.mat" />
+    <Content Include="Resources\cube.obj" />
+    <Content Include="Resources\Lit.glsl" />
+    <Content Include="Resources\LitMaterial.mat" />
+    <Content Include="Resources\ErrorMaterial.mat" />
+    <Content Include="Resources\plane.obj" />
+    <Content Include="Resources\PostProcessing.glsl" />
     <Content Include="Resources\quad.obj" />
+    <Content Include="Resources\sphere.obj" />
+    <Content Include="Resources\UnlitMaterial.mat" />
     <Content Include="Source\Engine\ShaderParams.h" />
     <Content Include="Source\nativefiledialog\nfd_cocoa.m" />
     <Content Include="x64\Debug\opengl_shenanigans.exe" />

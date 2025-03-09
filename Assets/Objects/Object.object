@@ -1,16 +1,16 @@
 {
   "GUID": "a23576db-7a8f-9f95-20b6-5787df9d8bd7",
-  "materialGUID": "66cc33d4-95a9-3c7f-edb8-b452f09ea440",
-  "modelGUID": "06ba0fb0-7364-bd16-4b4a-1cceeb9e9ca7",
+  "materialGUID": "00000000-0000-0000-0000-000000000007",
+  "modelGUID": "b9cfd5f9-92df-2a9f-bdf2-627c88801f52",
   "name": "Sphere",
   "position": [
-    3.9000000953674316,
-    0.0,
-    0.0
+    -0.20000000298023224,
+    1.0,
+    1.0
   ],
   "rotation": [
-    -36.0,
-    0.0,
+    -737.0,
+    -746.0,
     0.0
   ],
   "scale": [

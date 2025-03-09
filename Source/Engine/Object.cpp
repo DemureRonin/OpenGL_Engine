@@ -1,5 +1,6 @@
 ﻿#include "Object.h"
 
+#include "Managers/AssetLoader.h"
 #include "Managers/ObjectManager.h"
 
 void Object::Draw()
@@ -9,18 +10,22 @@ void Object::Draw()
         model->meshes[0]->Draw();
 }
 
-void Object::SetModel(const std::shared_ptr<Model>& newMesh)
+void Object::SetModel(const std::shared_ptr<Model>& newModel)
 {
-    this->model = newMesh;
+    auto prevModel = model;
+    this->model = newModel;
+    if (prevModel == nullptr && newModel != nullptr)
+    {
+        SetMaterial(std::static_pointer_cast<Material>(AssetLoader::GetAsset(Engine::GUID::FromString(MATERIAL_LIT))));
+        ObjectManager::AddObjectToRender(this->GetSharedPtr());
+    }
 }
 
 void Object::SetMaterial(const std::shared_ptr<Material>& newMaterial)
 {
-    /*if (!material && newMaterial)
-    {
-        this->material = newMaterial;
-        ObjectManager::AddObjectToRender(GetSharedPtr());
-        return;
-    }*/
-    this->material = newMaterial;
+    std::shared_ptr<Material> oldMaterial = this->material;
+    this->material = newMaterial; 
+
+    ObjectManager::UpdateObjectMaterial(this->GetSharedPtr(), oldMaterial, newMaterial);
 }
+
