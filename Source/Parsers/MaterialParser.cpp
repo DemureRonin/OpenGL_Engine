@@ -1,41 +1,8 @@
 ﻿#include "MaterialParser.h"
 
 #include "../Engine/Managers/AssetLoader.h"
-
-
-std::vector<std::shared_ptr<Material>> MaterialParser::materials{};
+#include "../Engine/Types.h"
 const char* MaterialParser::m_DebugName = "MATERIAL_PARSER";
-std::shared_ptr<Material> MaterialParser::ParseMaterial(const char* assetPath, Engine::GUID inGUID)
-{
-    std::ifstream file(assetPath);
-    if (!file.is_open())
-    {
-        std::cerr << "Failed to open material file: " << assetPath << '\n';
-        return std::static_pointer_cast<Material>(AssetLoader::GetAsset(Engine::GUID::FromString(MATERIAL_ERROR)));
-    }
-
-    json data;
-    try
-    {
-        file >> data;
-    }
-    catch (const json::exception& e)
-    {
-        std::cerr << "JSON parse error: " << e.what() << '\n';
-        return std::static_pointer_cast<Material>(AssetLoader::GetAsset(Engine::GUID::FromString(MATERIAL_ERROR)));
-    }
-
-    auto params = LoadShaderParams(data);
-    auto shader = std::static_pointer_cast<Shader>(
-        AssetLoader::GetAsset(Engine::GUID::FromString(params->shaderIDString)));
-
-    if (!shader || !shader->CompiledSuccessfully())
-    {
-        return std::static_pointer_cast<Material>(AssetLoader::GetAsset(Engine::GUID::FromString(MATERIAL_ERROR)));
-    }
-
-    return std::make_shared<Material>(assetPath, inGUID, shader, params);
-}
 
 std::shared_ptr<ShaderParams> MaterialParser::LoadShaderParams(const json& data)
 {
@@ -127,7 +94,47 @@ std::shared_ptr<ShaderParams> MaterialParser::LoadShaderParams(const json& data)
     return params;
 }
 
+void MaterialParser::Fallback(const char* assetPath, std::shared_ptr<Shader>& shader,
+                              std::shared_ptr<ShaderParams>& params)
+{
+    ConsoleDebug::PrintFileError(m_DebugName, assetPath, " ");
+    ConsoleDebug::PrintFallback(m_DebugName);
+    shader = TYPEOF(Shader)(AssetLoader::GetAsset(Engine::GUID::FromString(SHADER_UNLIT)));
+    params = TYPEOF(Material)(AssetLoader::GetAsset(Engine::GUID::FromString(MATERIAL_ERROR)))->shaderParams;
+}
 
+bool MaterialParser::ParseMaterial(const char* assetPath, std::shared_ptr<Shader>& shader,
+                                   std::shared_ptr<ShaderParams>& params)
+{
+    std::ifstream file(assetPath);
+    if (!file.is_open())
+    {
+        Fallback(assetPath, shader, params);
+        return false;
+    }
+
+    json data;
+    try
+    {
+        file >> data;
+    }
+    catch (const json::exception& e)
+    {
+        Fallback(assetPath, shader, params);
+        return false;
+    }
+
+    params = LoadShaderParams(data);
+    shader = std::static_pointer_cast<Shader>(
+        AssetLoader::GetAsset(Engine::GUID::FromString(params->shaderIDString)));
+
+    if (!shader || !shader->CompiledSuccessfully())
+    {
+        Fallback(assetPath, shader, params);
+        return false;
+    }
+    return true;
+}
 
 void MaterialParser::SaveMaterial(const std::shared_ptr<Material>& material, const char* assetPath)
 {

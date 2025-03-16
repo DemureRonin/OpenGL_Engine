@@ -12,6 +12,7 @@ UIWindow::UIWindow(const char* inName, Engine::UIID inUIID, const std::shared_pt
     this->UIID = inUIID;
     this->uiManager = inUIManager;
     windowName = std::string(name) + "###" + std::to_string(UIID.id);
+    windowHash = "###" + std::to_string(UIID.id);
 }
 
 void UIWindow::RenderPopUp()

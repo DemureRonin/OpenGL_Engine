@@ -9,5 +9,5 @@ class MaterialUIWindow : public UIWindow
 {
 public:
     MaterialUIWindow(const char* inName, Engine::UIID inUIID, const std::shared_ptr<UIManager>& inUIManager);
-    void Render() override;
+    void RenderWindow() override;
 };

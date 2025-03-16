@@ -6,7 +6,7 @@ Toolbar::Toolbar(const char* inName, Engine::UIID inUIID, const std::shared_ptr<
 {
 }
 
-void Toolbar::Render()
+void Toolbar::RenderWindow()
 {
     if (ImGui::BeginMainMenuBar())
     {
@@ -21,10 +21,10 @@ void Toolbar::Render()
             {
                 uiManager->CreateHierarchyWindow();
             }
-
-            if (ImGui::MenuItem("Material"))
+            
+            if (ImGui::MenuItem("Asset Browser"))
             {
-                uiManager->CreateMaterialWindow();
+                uiManager->CreateAssetBrowserWindow();
             }
 
             ImGui::EndMenu();

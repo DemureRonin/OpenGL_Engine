@@ -1,7 +1,7 @@
 ﻿#include "MaterialUIWindow.h"
 
 #include "InspectorUIWindow.h"
-#include "../Engine/Object.h"
+#include "../Engine/Prefab.h"
 
 MaterialUIWindow::MaterialUIWindow(const char* inName, Engine::UIID inUIID,
                                    const std::shared_ptr<UIManager>& inUIManager): UIWindow(
@@ -9,11 +9,11 @@ MaterialUIWindow::MaterialUIWindow(const char* inName, Engine::UIID inUIID,
 {
 }
 
-void MaterialUIWindow::Render()
+void MaterialUIWindow::RenderWindow()
 {
     if (ImGui::Begin(windowName.c_str(), nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
     {
-        RenderPopUp();
+        /*RenderPopUp();
         if (InspectorUIWindow::activeUIObject == nullptr || InspectorUIWindow::activeUIObject->material == nullptr)
         {
             ImGui::End();
@@ -64,7 +64,7 @@ void MaterialUIWindow::Render()
         for (auto& [name, value] : InspectorUIWindow::activeUIObject->material->shaderParams->vec4Parameters)
         {
             ImGui::DragFloat4(name.c_str(), &value[0], 0.001f, 0.0f, 1.0f, "%.4f");
-        }
+        }*/
         ImGui::End();
     }
 }

@@ -15,7 +15,8 @@ enum class AssetType : std::uint8_t
     Shader,
     Material,
     Object,
-    Font
+    Font,
+    Scene
 };
 
 
@@ -29,8 +30,11 @@ public:
     const std::string& GetAssetPath() const { return m_AssetPath; }
     Engine::GUID GetGUID() const { return m_GUID; }
     AssetType GetAssetType() const { return m_AssetType; }
-    
+
     static const std::unordered_map<std::string, AssetType> extensionMap;
+    bool loadedSuccessfully = true;
+    std::string name;
+
 private:
     Engine::GUID m_GUID;
     std::string m_AssetPath;

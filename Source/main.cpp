@@ -6,9 +6,10 @@
 #include "Engine/RenderTexture.h"
 #include "Engine/Initialization/GLADInitializer.h"
 #include "Engine/Initialization/GLFWInitializer.h"
+#include "Engine/Scene.h"
 #include "Engine/Initialization/ImGUIInitializer.h"
 #include "Engine/Managers/AssetLoader.h"
-#include "Engine/Managers/ObjectManager.h"
+
 #include "Engine/Time/Time.h"
 #include "imgui/imgui.h"
 #include "Parsers/MaterialParser.h"
@@ -16,7 +17,7 @@
 #include "UI/HierarchyUIWindow.h"
 #include "UI/InspectorUIWindow.h"
 #include "UI/MaterialUIWindow.h"
-#include "UI/ProjectUIWindow.h"
+#include "UI/AssetBrowserUIWindow.h"
 #include "UI/SceneUIWindow.h"
 #include "UI/Toolbar.h"
 
@@ -38,16 +39,12 @@ int main()
     ImGuiIO io;
     ImGUIInitializer::InitImGUI(window, io);
 
-    for (auto it : AssetLoader::objects)
-    {
-        ObjectManager::AddObject(it.second);
-    }
+
     DirectionalLight dirLight;
-
-    SceneUIWindow scene(camera, Renderer::GetViewport().x, Renderer::GetViewport().y);
-    auto uiManager = std::make_shared<UIManager>();
+    auto scene = std::make_shared<Scene>(AssetLoader::projectAssetsPath + "/Scenes/Scene.scene",
+                                         Engine::GUID::Generate(), camera, dirLight);
+    auto uiManager = std::make_shared<UIManager>(scene, camera, Renderer::GetViewport().x, Renderer::GetViewport().y);
     uiManager->CreateBasicLayout();
-
     while (!glfwWindowShouldClose(window))
     {
         Time::Tick();
@@ -55,8 +52,7 @@ int main()
         ImGUIInitializer::NewFrame();
 
         uiManager->RenderUI();
-        scene.NewFrame();
-
+        uiManager->SceneNewFrame();
 
         Renderer::SetPolygonMode();
         Renderer::SetBackfaceCulling(true);
@@ -65,25 +61,9 @@ int main()
 
         Renderer::EnableDepthTest(true);
         Renderer::Clear();
+        scene->Render();
+        uiManager->RenderScene();
 
-
-        for (const auto& pair : ObjectManager::materialObjectMap)
-        {
-            std::shared_ptr<Material> material = pair.first;
-            std::vector<std::shared_ptr<Object>> objs = pair.second;
-            material->shader->Bind();
-            material->shader->SetMaterialUniforms(material);
-            material->shader->SetDirectionalLightUniforms(dirLight);
-
-
-            for (const auto& obj : objs)
-            {
-                if (obj->model == nullptr) continue;
-                material->shader->SetObjectUniforms(*camera, *obj);
-                obj->Draw();
-            }
-        }
-        scene.Render();
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         glfwSwapBuffers(window);

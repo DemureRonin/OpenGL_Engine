@@ -2,14 +2,14 @@
 
 #include "Camera.h"
 #include "Material.h"
-#include "Object.h"
+#include "Prefab.h"
 #include "ShaderParams.h"
 #include "../Parsers/ShaderParser.h"
 
 
-Shader::Shader(const char* filePath, Engine::GUID inGUID): Asset(filePath, AssetType::Shader, inGUID)
+Shader::Shader(const std::string& filePath, Engine::GUID inGUID): Asset(filePath, AssetType::Shader, inGUID)
 {
-    const auto shaderSource = ShaderParser::ParseShaderFile(filePath);
+    const auto shaderSource = ShaderParser::ParseShaderFile(filePath.c_str());
 
     const char* vShaderCode = shaderSource.vertex.c_str();
     const char* fShaderCode = shaderSource.fragment.c_str();
@@ -18,18 +18,18 @@ Shader::Shader(const char* filePath, Engine::GUID inGUID): Asset(filePath, Asset
     glShaderSource(vertex, 1, &vShaderCode, NULL);
     glCompileShader(vertex);
 
-    m_CompiledSuccessfully &= ShaderParser::CheckCompileErrors(vertex, "VERTEX");
+    loadedSuccessfully &= ShaderParser::CheckCompileErrors(vertex, "VERTEX");
 
     unsigned int fragment = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragment, 1, &fShaderCode, NULL);
     glCompileShader(fragment);
-    m_CompiledSuccessfully &= ShaderParser::CheckCompileErrors(fragment, "FRAGMENT");
+    loadedSuccessfully &= ShaderParser::CheckCompileErrors(fragment, "FRAGMENT");
 
     m_RendererID = glCreateProgram();
     glAttachShader(m_RendererID, vertex);
     glAttachShader(m_RendererID, fragment);
     glLinkProgram(m_RendererID);
-    m_CompiledSuccessfully &= ShaderParser::CheckCompileErrors(m_RendererID, "PROGRAM");
+    loadedSuccessfully &= ShaderParser::CheckCompileErrors(m_RendererID, "PROGRAM");
 
     glDeleteShader(vertex);
     glDeleteShader(fragment);
@@ -145,7 +145,7 @@ void Shader::SetCameraUniforms(const Camera& camera)
     SetMat4(MVPmat4, "MVPmat4");
 }
 
-void Shader::SetObjectUniforms(const Camera& camera, const Object& object) const
+void Shader::SetObjectUniforms(const Camera& camera, const Prefab& object) const
 {
     glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom),
                                             static_cast<float>(camera.aspectX) / static_cast<float>(camera.aspectY),

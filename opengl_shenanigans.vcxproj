@@ -247,12 +247,12 @@
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
     <ClCompile Include="Source\Engine\ConsoleDebug\ConsoleDebug.cpp" />
+    <ClCompile Include="Source\Engine\GameObject.cpp" />
     <ClCompile Include="Source\Engine\Initialization\ImGUIInitializer.cpp" />
     <ClCompile Include="Source\Engine\Managers\AssetLoader.cpp" />
-    <ClCompile Include="Source\Engine\Managers\ObjectManager.cpp" />
     <ClCompile Include="Source\Engine\Mesh.cpp" />
     <ClCompile Include="Source\Engine\Model.cpp" />
-    <ClCompile Include="Source\Engine\Object.cpp">
+    <ClCompile Include="Source\Engine\Prefab.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <Optimization>Disabled</Optimization>
@@ -475,6 +475,7 @@
       <SDLCheck>true</SDLCheck>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="Source\Engine\Scene.cpp" />
     <ClCompile Include="Source\Engine\Shader.cpp" />
     <ClCompile Include="Source\Engine\Test.cpp" />
     <ClCompile Include="Source\Engine\Texture.cpp">
@@ -785,13 +786,15 @@
     <ClCompile Include="Source\nativefiledialog\nfd_common.c" />
     <ClCompile Include="Source\nativefiledialog\nfd_win.cpp" />
     <ClCompile Include="Source\Parsers\MaterialParser.cpp" />
+    <ClCompile Include="Source\Parsers\ModelParser.cpp" />
     <ClCompile Include="Source\Parsers\ObjectParser.cpp" />
+    <ClCompile Include="Source\Parsers\SceneParser.cpp" />
+    <ClCompile Include="Source\Parsers\TextureParser.cpp" />
     <ClCompile Include="Source\UI\DirectionalLightUIWindow.cpp" />
     <ClCompile Include="Source\UI\HierarchyUIWindow.cpp" />
     <ClCompile Include="Source\UI\MaterialUIWindow.cpp" />
     <ClCompile Include="Source\UI\InspectorUIWindow.cpp" />
-    <ClCompile Include="Source\UI\ProjectUIWindow.cpp" />
-    <ClCompile Include="Source\UI\RendererUIWindow.cpp" />
+    <ClCompile Include="Source\UI\AssetBrowserUIWindow.cpp" />
     <ClCompile Include="Source\UI\SceneUIWindow.cpp" />
     <ClCompile Include="Source\UI\Toolbar.cpp" />
     <ClCompile Include="Source\UI\UIManager.cpp" />
@@ -1101,17 +1104,19 @@
     <ClInclude Include="Source\Engine\ConsoleDebug\DebugUtils.h" />
     <ClInclude Include="Source\Engine\ConsoleDebug\ConsoleDebug.h" />
     <ClInclude Include="Source\Engine\DirectionalLight.h" />
+    <ClInclude Include="Source\Engine\FastDelegate.h" />
+    <ClInclude Include="Source\Engine\GameObject.h" />
     <ClInclude Include="Source\Engine\Initialization\GLADInitializer.h" />
     <ClInclude Include="Source\Engine\Initialization\GLFWInitializer.h" />
     <ClInclude Include="Source\Engine\Initialization\ImGUIInitializer.h" />
     <ClInclude Include="Source\Engine\Managers\AssetLoader.h" />
-    <ClInclude Include="Source\Engine\Managers\ObjectManager.h" />
     <ClInclude Include="Source\Engine\Material.h" />
     <ClInclude Include="Source\Engine\Mesh.h" />
     <ClInclude Include="Source\Engine\Model.h" />
-    <ClInclude Include="Source\Engine\Object.h" />
+    <ClInclude Include="Source\Engine\Prefab.h" />
     <ClInclude Include="Source\Engine\RenderTexture.h" />
     <ClInclude Include="Source\Engine\Renderer.h" />
+    <ClInclude Include="Source\Engine\Scene.h" />
     <ClInclude Include="Source\Engine\Shader.h" />
     <ClInclude Include="Source\Engine\stb_image.h" />
     <ClInclude Include="Source\Engine\stb_image_impl.h" />
@@ -1119,6 +1124,7 @@
     <ClInclude Include="Source\Engine\Texture.h" />
     <ClInclude Include="Source\Engine\Time\Time.h" />
     <ClInclude Include="Source\Engine\Transform.h" />
+    <ClInclude Include="Source\Engine\Types.h" />
     <ClInclude Include="Source\imgui\imconfig.h" />
     <ClInclude Include="Source\imgui\imgui.h" />
     <ClInclude Include="Source\imgui\imgui_impl_glfw.h" />
@@ -1133,19 +1139,23 @@
     <ClInclude Include="Source\nativefiledialog\nfd.h" />
     <ClInclude Include="Source\nativefiledialog\nfd_common.h" />
     <ClInclude Include="Source\Parsers\MaterialParser.h" />
+    <ClInclude Include="Source\Parsers\ModelParser.h" />
     <ClInclude Include="Source\Parsers\ObjectParser.h" />
+    <ClInclude Include="Source\Parsers\SceneParser.h" />
     <ClInclude Include="Source\Parsers\ShaderParser.h" />
+    <ClInclude Include="Source\Parsers\TextureParser.h" />
     <ClInclude Include="Source\UI\DirectionalLightUIWindow.h" />
     <ClInclude Include="Source\UI\HierarchyUIWindow.h" />
+    <ClInclude Include="Source\UI\IconsFontAwesome5.h" />
     <ClInclude Include="Source\UI\MaterialUIWindow.h" />
     <ClInclude Include="Source\UI\InspectorUIWindow.h" />
-    <ClInclude Include="Source\UI\ProjectUIWindow.h" />
-    <ClInclude Include="Source\UI\RendererUIWindow.h" />
+    <ClInclude Include="Source\UI\AssetBrowserUIWindow.h" />
     <ClInclude Include="Source\UI\SceneUIWindow.h" />
     <ClInclude Include="Source\UI\Toolbar.h" />
     <ClInclude Include="Source\UI\UIManager.h" />
     <ClInclude Include="Source\UI\UIWindow.h" />
     <ClInclude Include="Source\Utils\Colors.h" />
+    <ClInclude Include="Source\Utils\Filepaths.h" />
     <ClInclude Include="Source\Utils\json.h" />
     <ClInclude Include="Source\Utils\Primitives\CubePositions.h" />
     <ClInclude Include="Source\Utils\Primitives\PlanePositions.h" />
@@ -1175,10 +1185,13 @@
     <Content Include=".vs\opengl_shenanigans\v17\ipch\AutoPCH\ea94e56f23d7f1ce\DEPENDENCIES.ipch" />
     <Content Include=".vs\opengl_shenanigans\v17\Solution.VC.db" />
     <Content Include="Assets\Fonts\0xProtoNerdFontMono-Regular.ttf" />
+    <Content Include="Assets\Fonts\Font Awesome 5 Free-Regular-400.otf" />
     <Content Include="Assets\Fonts\FontAwesome.otf" />
     <Content Include="Assets\Fonts\JetBrainsMonoNL-Regular.ttf" />
+    <Content Include="Assets\Fonts\OpenFontIcons.ttf" />
     <Content Include="Assets\Materials\material.mat" />
     <Content Include="Assets\Materials\material1.mat" />
+    <Content Include="Assets\Scenes\Scene.scene" />
     <Content Include="imgui.ini" />
     <Content Include="Libraries\Lib\glfw3.lib" />
     <Content Include="opengl_s.1b920e6d\x64\Debug\glad.obj" />
@@ -1212,6 +1225,7 @@
     <Content Include="Resources\1x1_white.jpeg" />
     <Content Include="Resources\200px-Debugempty.png" />
     <Content Include="Resources\cube.obj" />
+    <Content Include="Resources\ErrorModel.fbx" />
     <Content Include="Resources\Lit.glsl" />
     <Content Include="Resources\LitMaterial.mat" />
     <Content Include="Resources\ErrorMaterial.mat" />

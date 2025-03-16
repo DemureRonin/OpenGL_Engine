@@ -20,7 +20,7 @@ glm::vec3 ObjectParser::ParseVec3(const json& j, const std::string& key)
     return glm::vec3(0.0f);
 }
 
-std::shared_ptr<Object> ObjectParser::ParseObject(const char* filePath, Engine::GUID inGUID)
+std::shared_ptr<Prefab> ObjectParser::ParseObject(const char* filePath, Engine::GUID inGUID)
 {
     std::ifstream file(filePath);
     if (!file.is_open())
@@ -52,14 +52,14 @@ std::shared_ptr<Object> ObjectParser::ParseObject(const char* filePath, Engine::
     Engine::GUID modelID = Engine::GUID::FromString(j.value("modelGUID", ""));
     Engine::GUID materialID = Engine::GUID::FromString(j.value("materialGUID", ""));
 
-    auto createdObject = std::make_shared<Object>(inGUID, name, position, rotation, scale, true, filePath);
+    auto createdObject = std::make_shared<Prefab>(inGUID, name, position, rotation, scale, filePath);
 
   
     auto objectModel = std::static_pointer_cast<Model>(AssetLoader::GetAsset(modelID));
     auto objectMat = std::static_pointer_cast<Material>(AssetLoader::GetAsset(materialID));
 
-    if (objectModel)
-        createdObject->SetModel(objectModel);
+    //if (objectModel)
+      //  createdObject->SetMesh(objectModel);
     if (objectMat)
         createdObject->SetMaterial(objectMat);
 
@@ -69,7 +69,7 @@ std::shared_ptr<Object> ObjectParser::ParseObject(const char* filePath, Engine::
     return createdObject;
 }
 
-int ObjectParser::SaveObject(const char* filePath, const std::shared_ptr<Object>& object)
+int ObjectParser::SaveObject(const char* filePath, const std::shared_ptr<Prefab>& object)
 {
     if (!object->loadedSuccessfully)
     {
@@ -79,13 +79,13 @@ int ObjectParser::SaveObject(const char* filePath, const std::shared_ptr<Object>
 
    
     json jsonObject = {
-        {"GUID", object->GetGUID().ToString()},
-        {"modelGUID", object->model ? object->model->GetGUID().ToString() : ""},
+        /*{"GUID", object->GetGUID().ToString()},
+        {"modelGUID", object->mesh ? object->mesh->GetGUID().ToString() : ""},
         {"materialGUID", object->material ? object->material->GetGUID().ToString() : ""},
         {"name", object->name},
         {"position", {object->transform.position.x, object->transform.position.y, object->transform.position.z}},
         {"rotation", {object->transform.rotation.x, object->transform.rotation.y, object->transform.rotation.z}},
-        {"scale", {object->transform.scale.x, object->transform.scale.y, object->transform.scale.z}}
+        {"scale", {object->transform.scale.x, object->transform.scale.y, object->transform.scale.z}}*/
     };
 
     std::ofstream file(filePath);

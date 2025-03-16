@@ -11,16 +11,19 @@
 class UIWindow : public std::enable_shared_from_this<UIWindow>
 {
 public:
-    UIWindow(const char* inName, Engine::UIID inUIID, const std::shared_ptr<UIManager> & inUIManager);
+    UIWindow(const char* inName, Engine::UIID inUIID, const std::shared_ptr<UIManager>& inUIManager);
     virtual ~UIWindow() = default;
+
     std::shared_ptr<UIWindow> GetSharedPtr()
     {
         return shared_from_this();
     }
+
     std::shared_ptr<UIManager> uiManager;
     std::string name;
     Engine::UIID UIID;
     std::string windowName;
+    std::string windowHash;
     void RenderPopUp();
-    virtual void Render() = 0;
+    virtual void RenderWindow() = 0;
 };

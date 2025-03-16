@@ -1,19 +1,22 @@
 ﻿#pragma once
 
+#include "UIWindow.h"
 #include "../Engine/RenderTexture.h"
 
 
-class SceneUIWindow
+class Scene;
+
+class SceneUIWindow : public UIWindow
 {
 public:
-    SceneUIWindow(const std::shared_ptr<Camera>& camera, int width, int height);
+    SceneUIWindow(const char* inName, Engine::UIID inUIID,
+                  const std::shared_ptr<UIManager>& inUIManager,
+                  const std::shared_ptr<Camera>& camera, int width, int height, const std::shared_ptr<Scene>& inScene);
     std::shared_ptr<Camera> camera;
-    std::vector<float> GenerateGridVertices(float gridSize, float step);
-    std::vector<float> gridVertices;
-    GLuint gridVAO, gridVBO;
     void NewFrame();
-    void Render();
+    void RenderWindow() override;
     int width, height;
     std::shared_ptr<Material> gridMaterial;
     RenderTexture renderTexture;
+    std::shared_ptr<Scene> scene;
 };

@@ -2,12 +2,12 @@
 #include "Shader.h"
 #include "Buffers/FBO/FrameBuffer.h"
 #include "Buffers/RBO/RenderBufferObject.h"
-#include "Object.h"
+#include "Prefab.h"
 
 class RenderTexture
 {
 public:
-    std::shared_ptr<Object> object;
+    std::shared_ptr<Prefab> object;
     FrameBuffer FBO = FrameBuffer();
     RenderBufferObject RBO = RenderBufferObject();
     std::shared_ptr<Shader> postShader;

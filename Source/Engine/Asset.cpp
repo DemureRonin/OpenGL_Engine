@@ -1,9 +1,11 @@
 ﻿#include "Asset.h"
+#include <filesystem>
 
 Asset::Asset(std::string assetPath, AssetType assetType, Engine::GUID guid) : m_GUID(guid),
                                                                               m_AssetPath(std::move(assetPath)),
                                                                               m_AssetType(assetType)
 {
+    name = std::filesystem::path(m_AssetPath).filename().string();
 }
 
 const char* Asset::ToString(AssetType type)
@@ -17,6 +19,7 @@ const char* Asset::ToString(AssetType type)
     case AssetType::Material: return "Material";
     case AssetType::Object: return "Object";
     case AssetType::Font: return "Font";
+    case AssetType::Scene: return "Engine Scene";
     }
     return "ERRORTYPE";
 }
@@ -28,4 +31,5 @@ const std::unordered_map<std::string, AssetType> Asset::extensionMap = {
     {".glsl", AssetType::Shader},
     {".mat", AssetType::Material},
     {".ttf", AssetType::Font},
+    {".scene", AssetType::Scene},
 };

@@ -12,5 +12,5 @@ public:
   void SetPosition(glm::vec3 newPosition);
   void SetRotation(glm::vec3 newRotation);
   void SetScale(glm::vec3 newScale);
-  void ApplyTranslation();
+   glm::mat4 ApplyTranslation(const glm::mat4& parent);
 };
